@@ -8,11 +8,13 @@ Known npm package issues: https://github.com/NodeRedis/node_redis/issues/790
 #### Compile and hotload frontend:
 ```
 npm run frontend-server
+// Go to localhost:8080
 ```
 
 #### Compile and run backend server (no hotloading yet):
 ```
 npm run backend-server
+// Go to localhost:3000
 ```
 
 #### Compile frontend and backend server
