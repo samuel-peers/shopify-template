@@ -1,0 +1,29 @@
+- [x] copy index.html into dist
+- [x] global eslint config file
+- [] global dist folder?
+- [x] bundle server code and node modules
+- [x] fudge the yarn stuff (delete the yarn lock)
+- [x] favicon not showing
+- [x] logo not showing
+- [x] shopify auth
+- [x] fucking eslint no vars, " versus ', object shorthand
+- [x] tmux script
+- [] run source zipper.sh in npm build
+- [x] add shopify keys to lambda env variables
+- [x] server verification (look up on shopify tutorial)
+- [] lambda auto deploy on commit
+- [x] on authenticated install, redirect
+- [x] replace stupid require statements
+- [] server hotloading
+- [] HARD CODED SERVER URL
+- [x] index page security
+- [] solid fucking logging
+- [x] static security
+- [x] redis session
+- [x] redis security group
+- [] actual session security
+- [] node debugging
+- [x] return 404s on rejection
+- [] actual session key
+- [x] just res.sendstatus instead of redirect
+- [] will my redis sessions be destroyed on exit or something?

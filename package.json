@@ -1,0 +1,42 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build-backend": "cd backend && webpack",
+    "build-frontend": "cd frontend && vue-cli-service build",
+    "backend-server": "npm run build-backend && node backend/dist/server-build.js",
+    "frontend-server": "cd frontend && vue-cli-service serve",
+    "build": "npm run build-backend && npm run build-frontend",
+    "lint": "eslint 'src/**/*.{js,vue}'"
+  },
+  "dependencies": {
+    "aws-serverless-express": "^3.3.5",
+    "axios": "^0.18.0",
+    "hiredis": "^0.5.0",
+    "connect-redis": "^3.4.1",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "express-shopify-auth": "0.0.5",
+    "morgan": "^1.9.1",
+    "vue": "^2.6.6"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.5.0",
+    "@vue/cli-plugin-eslint": "^3.5.0",
+    "@vue/cli-service": "^3.5.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.8.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^4.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-prettier": "^3.0.1",
+    "eslint-plugin-vue": "^5.0.0",
+    "prettier": "^1.16.4",
+    "vue-eslint-parser": "^6.0.3",
+    "vue-template-compiler": "^2.5.21",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  }
+}
