@@ -1,39 +1,39 @@
-# test
-
 ## Project setup
 
 ```
-yarn install
+npm install
 ```
+Known npm package issues: https://github.com/NodeRedis/node_redis/issues/790
 
-### Compiles and hot-reloads for development
-
-```
-yarn run serve
-```
-
-### Compiles and minifies for production
+### Compile and hotload frontend:
 
 ```
-yarn run build
+npm run frontend-server
 ```
 
-### Run your tests
+### Compile and run backend server (no hotloading yet):
 
 ```
-yarn run test
+npm run backend-server
 ```
 
-### Lints and fixes files
+### Compile frontend and backend server
 
 ```
-yarn run lint
+npm run build
+```
+### To run all the above steps in tmux sessions:
+
+```
+source tmux.sh
 ```
 
-### Customize configuration
+### Zip for cloud consumption:
 
-See [Configuration Reference](https://cli.vuejs.org/config/).
+```
+source zipper.sh
+```
 
-redis setup: https://medium.com/@feliperohdee/installing-redis-to-an-aws-ec2-machine-2e2c4c443b68
+### Customize Vue configuration
 
-known npm package issues: https://github.com/NodeRedis/node_redis/issues/790
+See [Configuration Reference](https://cli.vuejs.org/config/)
