@@ -1,3 +1,18 @@
+#### Requirements
+A `.env` file with the following the format:
+```bash
+export SHOPIFY_API_KEY='xxxx'
+export SHOPIFY_API_SECRET_KEY='xxxx'
+export REDIS_HOST='xxxx'
+export REDIS_PASSWORD='xxxx'
+export REDIS_PORT='xxxx'
+export SESSION_SECRET='xxxx'
+```
+
+An AWS Lambda function (consumes output of `source zipper.sh`).
+
+A Redis server (follow the setup guide [here](https://medium.com/@feliperohdee/installing-redis-to-an-aws-ec2-machine-2e2c4c443b68)).
+
 #### Install
 ```
 npm install
