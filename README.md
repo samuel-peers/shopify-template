@@ -1,12 +1,15 @@
 #### Requirements
+
 A `.env` file with the following the format:
+
 ```bash
-export SHOPIFY_API_KEY='xxxx'
-export SHOPIFY_API_SECRET_KEY='xxxx'
-export REDIS_HOST='xxxx'
-export REDIS_PASSWORD='xxxx'
-export REDIS_PORT='xxxx'
-export SESSION_SECRET='xxxx'
+SHOPIFY_API_KEY='xxxx'
+SHOPIFY_API_SECRET_KEY='xxxx'
+REDIS_HOST='xxxx'
+REDIS_PASSWORD='xxxx'
+REDIS_PORT='xxxx'
+SESSION_SECRET='xxxx'
+LOCAL='xxxx'
 ```
 
 An AWS Lambda function (consumes output of `source zipper.sh`).
@@ -14,6 +17,7 @@ An AWS Lambda function (consumes output of `source zipper.sh`).
 A Redis server (follow the setup guide [here](https://medium.com/@feliperohdee/installing-redis-to-an-aws-ec2-machine-2e2c4c443b68)).
 
 #### Install
+
 ```
 npm install
 ```
@@ -21,31 +25,37 @@ npm install
 Known npm package issues: https://github.com/NodeRedis/node_redis/issues/790
 
 #### Compile and hotload frontend:
+
 ```
 npm run frontend-server
 // Go to localhost:8080
 ```
 
 #### Compile and run backend server (no hotloading yet):
+
 ```
 npm run backend-server
 // Go to localhost:3000
 ```
 
 #### Compile frontend and backend server
+
 ```
 npm run build
 ```
 
 #### To run all the above steps in tmux sessions:
+
 ```
 source tmux.sh
 ```
 
 #### Zip for cloud consumption:
+
 ```
 source zipper.sh
 ```
 
 #### Customize Vue configuration
+
 See [Configuration Reference](https://cli.vuejs.org/config/)
