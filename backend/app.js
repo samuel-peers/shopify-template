@@ -18,8 +18,8 @@ const {
   REDIS_PORT
 } = process.env;
 
-const baseUrl = 'https://4a1jqd8qfk.execute-api.us-west-2.amazonaws.com/test';
-// const baseUrl = 'http://127.0.0.1:3000';
+// const baseUrl = 'https://4a1jqd8qfk.execute-api.us-west-2.amazonaws.com/test';
+const baseUrl = 'http://127.0.0.1:3000';
 // const baseUrl = 'https://ad122599.ngrok.io';
 const adminUrl = shop => `https://${shop}/admin/apps/${SHOPIFY_API_KEY}`;
 const redirectUrl = `${baseUrl}/auth/callback`;

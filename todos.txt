@@ -1,6 +1,6 @@
 - [x] copy index.html into dist
 - [x] global eslint config file
-- [] global dist folder?
+- [x] global dist folder?
 - [x] bundle server code and node modules
 - [x] fudge the yarn stuff (delete the yarn lock)
 - [x] favicon not showing
@@ -27,3 +27,5 @@
 - [] actual session key
 - [x] just res.sendstatus instead of redirect
 - [] will my redis sessions be destroyed on exit or something?
+- [] is babel config needed?
+- [] does everything still work when updating lambda?
