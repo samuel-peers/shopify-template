@@ -8,13 +8,13 @@
 - [x] shopify auth
 - [x] fucking eslint no vars, " versus ', object shorthand
 - [x] tmux script
-- [] run source zipper.sh in npm build
+- [x] run source zipper.sh in npm build
 - [x] add shopify keys to lambda env variables
 - [x] server verification (look up on shopify tutorial)
 - [] lambda auto deploy on commit
 - [x] on authenticated install, redirect
 - [x] replace stupid require statements
-- [] server hotloading
+- [x] server hotloading
 - [] HARD CODED SERVER URL
 - [x] index page security
 - [] solid fucking logging
@@ -22,10 +22,15 @@
 - [x] redis session
 - [x] redis security group
 - [] actual session security
+- [] better session secret key
 - [] node debugging
 - [x] return 404s on rejection
-- [] actual session key
 - [x] just res.sendstatus instead of redirect
-- [] will my redis sessions be destroyed on exit or something?
-- [] is babel config needed?
+- [x] will my redis sessions be destroyed on exit or something? nope
+- [] delete old sessions
+- [x] is babel config needed?
 - [] does everything still work when updating lambda?
+- [] a name
+- [] somehow unify lambda .env and local .env
+- [] redirect to shopify admin or promo site on unauthed path
+- [] run .env in npm run backend-server

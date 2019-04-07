@@ -1,6 +1,4 @@
-// install link
 // https://4a1jqd8qfk.execute-api.us-west-2.amazonaws.com/test/auth?shop=samuelpeers-test-store.myshopify.com
-// https://ad122599.ngrok.io/auth?shop=samuelpeers-test-store.myshopify.com
 import path from 'path';
 import express from 'express';
 import session from 'express-session';
@@ -15,12 +13,15 @@ const {
   SHOPIFY_API_KEY,
   REDIS_HOST,
   REDIS_PASSWORD,
-  REDIS_PORT
+  REDIS_PORT,
+  SESSION_SECRET,
+  LOCAL
 } = process.env;
 
-// const baseUrl = 'https://4a1jqd8qfk.execute-api.us-west-2.amazonaws.com/test';
-const baseUrl = 'http://127.0.0.1:3000';
-// const baseUrl = 'https://ad122599.ngrok.io';
+const baseUrl = LOCAL
+  ? 'http://127.0.0.1:3000'
+  : 'https://4a1jqd8qfk.execute-api.us-west-2.amazonaws.com/test';
+
 const adminUrl = shop => `https://${shop}/admin/apps/${SHOPIFY_API_KEY}`;
 const redirectUrl = `${baseUrl}/auth/callback`;
 const authPath = '/auth';
@@ -28,14 +29,13 @@ const authCallbackPath = '/auth/callback';
 const authSuccessUrl = `${baseUrl}/success`;
 const authFailUrl = `${baseUrl}/fail`;
 const scope = ['read_products'];
-const sessionSecret = 'my secret session';
 const distPath = '../../frontend/dist';
 const secureDir = 'secure';
 
 const noShopMsg = 'No shop query';
 const badShopMsg = 'Bad shop hostname';
 
-const auth = ShopifyAuth.create({
+const installAuth = ShopifyAuth.create({
   baseUrl,
   redirectUrl,
   authPath,
@@ -69,22 +69,31 @@ const redisStore = new RedisStore({
 app.use(
   session({
     store: redisStore,
-    secret: sessionSecret,
+    secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: true
   })
 );
 
-app.use(auth);
+app.use(installAuth);
 
-app.all(`/${secureDir}/*`, verifyHmac(SHOPIFY_API_SECRET_KEY, authFailUrl));
+const onNoAuth = args => {
+  args.res.redirect(authFailUrl);
+};
+
+const secureMiddleware = () =>
+  LOCAL
+    ? async (req, res, next) => next()
+    : verifyHmac(SHOPIFY_API_SECRET_KEY, onNoAuth);
+
+app.all(`/${secureDir}/*`, secureMiddleware());
 
 app.use(
   `/${secureDir}`,
   express.static(path.join(__dirname, distPath, secureDir))
 );
 
-app.get('/success', verifyInstalled(authFailUrl), (req, res) => {
+app.get('/success', verifyInstalled(onNoAuth), (req, res) => {
   res.redirect(adminUrl(req.session.shopify.shop));
 });
 

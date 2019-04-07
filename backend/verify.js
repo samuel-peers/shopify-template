@@ -1,22 +1,16 @@
 import ShopifyAuth from 'express-shopify-auth';
 
-export const verifyInstalled = authFailUrl => async (req, res, next) => {
+export const verifyInstalled = onNoAuth => async (req, res, next) => {
   const { shopify } = req.session;
 
   if (shopify && shopify.accessToken) {
     await next();
   }
 
-  res.redirect(authFailUrl);
+  onNoAuth({ res });
 };
 
-export const verifyHmac = (appSecret, authFailUrl) => async (
-  req,
-  res,
-  next
-) => {
-  console.log('SEEEEEEEEEEEEEEEESSSSSSSSSSSSSSSSSSSSIIIIIIIIOOOOOOONNNNNNNN');
-  console.log(req.session);
+export const verifyHmac = (appSecret, onNoAuth) => async (req, res, next) => {
   if (req.session.hmacVerified) {
     await next();
   } else if (
@@ -26,6 +20,6 @@ export const verifyHmac = (appSecret, authFailUrl) => async (
     req.session.hmacVerified = true;
     await next();
   } else {
-    res.redirect(authFailUrl);
+    onNoAuth({ res });
   }
 };
