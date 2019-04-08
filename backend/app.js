@@ -15,6 +15,7 @@ const {
   REDIS_PASSWORD,
   REDIS_PORT,
   SESSION_SECRET,
+  SESSION_NAME,
   LOCAL
 } = process.env;
 
@@ -70,6 +71,7 @@ app.use(
   session({
     store: redisStore,
     secret: SESSION_SECRET,
+    name: SESSION_NAME,
     resave: false,
     saveUninitialized: true
   })

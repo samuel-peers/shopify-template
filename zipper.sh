@@ -1,1 +1,1 @@
-zip -r output.zip backend/dist/* frontend/dist/* -x node_modules/*
+zip -r output.zip backend/dist/lambda-build.js frontend/dist/* -x node_modules/*

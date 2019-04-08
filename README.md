@@ -3,13 +3,14 @@
 A `.env` file with the following the format:
 
 ```bash
-SHOPIFY_API_KEY='xxxx'
-SHOPIFY_API_SECRET_KEY='xxxx'
-REDIS_HOST='xxxx'
-REDIS_PASSWORD='xxxx'
-REDIS_PORT='xxxx'
-SESSION_SECRET='xxxx'
-LOCAL='xxxx'
+export SHOPIFY_API_KEY='xxxx'
+export SHOPIFY_API_SECRET_KEY='xxxx'
+export REDIS_HOST='xxxx'
+export REDIS_PASSWORD='xxxx'
+export REDIS_PORT='xxxx'
+export SESSION_SECRET='xxxx'
+export SESSION_NAME='xxxx'
+export LOCAL='xxxx'
 ```
 
 An AWS Lambda function (consumes output of `source zipper.sh`).
