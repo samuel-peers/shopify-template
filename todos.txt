@@ -35,7 +35,7 @@
 - [] redirect to shopify admin or promo site on unauthed path
 - [x] run .env in npm run backend-server
 - [x] redis ami
-- [] lambda cold start. https://medium.freecodecamp.org/lambda-vpc-cold-starts-a-latency-killer-5408323278dd
+- [x] lambda cold start. https://medium.freecodecamp.org/lambda-vpc-cold-starts-a-latency-killer-5408323278dd
 use roles instead somehow?
 https://medium.com/@lakshmanLD/resolving-cold-start%EF%B8%8F-in-aws-lambda-804512ca9b61
 MODIFY SECURITY GROUP TO ALLOW ALL TRAFFIC FROM VPC https://stackoverflow.com/questions/40774585/aws-lambda-access-to-rds-outside-vpc
@@ -43,3 +43,4 @@ never mind goddammit just try dynamo instead
 - [] hotloader writing a million update.js files https://github.com/gaearon/react-hot-loader/issues/456
 consider alternatives https://webpack.js.org/configuration/watch/#watchoptions-poll + nodemon
 - [] cookie: {httpOnly: true} makes sessions unaccessible in apigateway/lambda
+- [] single initial html file with app.js and css etc

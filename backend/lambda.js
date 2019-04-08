@@ -1,22 +1,22 @@
-import awsServerlessExpress from "aws-serverless-express";
-import app from "./app";
+import awsServerlessExpress from 'aws-serverless-express';
+import app from './app';
 
 const binaryMimeTypes = [
-  "application/javascript",
-  "application/json",
-  "application/octet-stream",
-  "application/xml",
-  "font/eot",
-  "font/opentype",
-  "font/otf",
-  "image/*",
-  "text/comma-separated-values",
-  "text/css",
-  "text/html",
-  "text/javascript",
-  "text/plain",
-  "text/text",
-  "text/xml"
+  'application/javascript',
+  'application/json',
+  'application/octet-stream',
+  'application/xml',
+  'font/eot',
+  'font/opentype',
+  'font/otf',
+  'image/*',
+  'text/comma-separated-values',
+  'text/css',
+  'text/html',
+  'text/javascript',
+  'text/plain',
+  'text/text',
+  'text/xml'
 ];
 
 const server = awsServerlessExpress.createServer(app, null, binaryMimeTypes);

@@ -3,21 +3,24 @@ import path from 'path';
 import express from 'express';
 import session from 'express-session';
 import ShopifyAuth from 'express-shopify-auth';
-import connectRedis from 'connect-redis';
+import connectDynamodb from 'connect-dynamodb';
+
 import { verifyHmac, verifyInstalled } from './verify';
 
-const RedisStore = connectRedis(session);
+const DynamoDBStore = connectDynamodb({ session });
 
 const {
   SHOPIFY_API_SECRET_KEY,
   SHOPIFY_API_KEY,
-  REDIS_HOST,
-  REDIS_PASSWORD,
-  REDIS_PORT,
   SESSION_SECRET,
   SESSION_NAME,
-  LOCAL
+  LOCAL,
+  DYNAMO_REGION
 } = process.env;
+
+const sessionStore = new DynamoDBStore({
+  AWSRegion: DYNAMO_REGION
+});
 
 const baseUrl = LOCAL
   ? 'http://127.0.0.1:3000'
@@ -61,15 +64,9 @@ const installAuth = ShopifyAuth.create({
 
 const app = express();
 
-const redisStore = new RedisStore({
-  host: REDIS_HOST,
-  pass: REDIS_PASSWORD,
-  port: REDIS_PORT
-});
-
 app.use(
   session({
-    store: redisStore,
+    store: sessionStore,
     secret: SESSION_SECRET,
     name: SESSION_NAME,
     resave: false,

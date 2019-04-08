@@ -1,4 +1,5 @@
 const path = require('path');
+const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
   mode: 'production',
@@ -20,5 +21,11 @@ module.exports = {
   },
   optimization: {
     minimize: false
-  }
+  },
+  externals: [
+    nodeExternals({
+      modulesDir: '../node_modules',
+      whitelist: [/^((?!aws-sdk).)*$/]
+    })
+  ]
 };
