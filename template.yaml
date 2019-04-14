@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: An AWS Serverless Specification template describing your function.
+Resources:
+  todeletelambdafunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: backend/dist/lambda-build.handler
+      Runtime: nodejs8.10
+      CodeUri: .
+      Description: ''
+      MemorySize: 128
+      Timeout: 3
+      Role: >-
+        arn:aws:iam::697839264298:role/service-role/to-delete-lambda-function-role
+      Events:
+        Api1:
+          Type: Api
+          Properties:
+            Path: /
+            Method: GET
+        Api2:
+          Type: Api
+          Properties:
+            Path: /
+            Method: GET
+        Api3:
+          Type: Api
+          Properties:
+            Path: '/{proxy+}'
+            Method: ANY
+      Environment:
+        Variables:
+          LOCAL: ''
+          SECRET_KEY: 'AawW980}asd-asd1A1231230184aHasj-!!dJfh'
+          SHOPIFY_API_KEY: 1dc64cd33d37d2c54e16d09aca093c4a
+          SHOPIFY_API_SECRET_KEY: ce865d831704d9ba7c1f363a70a7ff55

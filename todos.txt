@@ -51,3 +51,4 @@ consider alternatives https://webpack.js.org/configuration/watch/#watchoptions-p
 - [] make the zip smaller? 7.7 mb is a lot
 - [] study cookie security
 - [] save accesstoken shop name to db
+- [] naked env variables in template.yml ***
