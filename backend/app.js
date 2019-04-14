@@ -1,40 +1,36 @@
 // https://4a1jqd8qfk.execute-api.us-west-2.amazonaws.com/test/auth?shop=samuelpeers-test-store.myshopify.com
+// https://8517a8c7.ngrok.io/auth?shop=samuelpeers-test-store.myshopify.com
 import path from 'path';
 import express from 'express';
-import session from 'express-session';
 import ShopifyAuth from 'express-shopify-auth';
-import connectDynamodb from 'connect-dynamodb';
-
-import { verifyHmac, verifyInstalled } from './verify';
-
-const DynamoDBStore = connectDynamodb({ session });
+import jwt from 'jsonwebtoken';
+import cookieParser from 'cookie-parser';
 
 const {
   SHOPIFY_API_SECRET_KEY,
   SHOPIFY_API_KEY,
-  SESSION_SECRET,
-  SESSION_NAME,
   LOCAL,
-  DYNAMO_REGION
+  SECRET_KEY
 } = process.env;
-
-const sessionStore = new DynamoDBStore({
-  AWSRegion: DYNAMO_REGION
-});
 
 const baseUrl = LOCAL
   ? 'http://127.0.0.1:3000'
   : 'https://4a1jqd8qfk.execute-api.us-west-2.amazonaws.com/test';
 
+const authFailUrl = `${baseUrl}/fail`;
+
+const onNoAuth = args => {
+  args.res.redirect(authFailUrl);
+};
+
 const adminUrl = shop => `https://${shop}/admin/apps/${SHOPIFY_API_KEY}`;
 const redirectUrl = `${baseUrl}/auth/callback`;
 const authPath = '/auth';
 const authCallbackPath = '/auth/callback';
-const authSuccessUrl = `${baseUrl}/success`;
-const authFailUrl = `${baseUrl}/fail`;
 const scope = ['read_products'];
 const distPath = '../../frontend/dist';
 const secureDir = 'secure';
+const homePage = 'index.html';
 
 const noShopMsg = 'No shop query';
 const badShopMsg = 'Bad shop hostname';
@@ -44,9 +40,9 @@ const installAuth = ShopifyAuth.create({
   redirectUrl,
   authPath,
   authCallbackPath,
-  authSuccessUrl,
   authFailUrl,
   scope,
+  authSuccessUrl: '',
   appKey: SHOPIFY_API_KEY,
   appSecret: SHOPIFY_API_SECRET_KEY,
   shop(req, done) {
@@ -56,45 +52,66 @@ const installAuth = ShopifyAuth.create({
 
     return done(errMsg, req.query.shop);
   },
-  onAuth(req, res, shop, accessToken, done) {
-    req.session.shopify = { shop, accessToken };
-    return done();
+  onAuth(req, res, shop, accessToken) {
+    // TODO save (shop, accessToken) to persistence
+    console.log(accessToken);
+    res.redirect(adminUrl(shop));
   }
 });
 
+const verifyToken = () => (req, res, next) => {
+  try {
+    const { token } = req.cookies;
+
+    jwt.verify(token, SECRET_KEY, err => {
+      if (!err) {
+        req.verified = true;
+      }
+      next();
+    });
+  } catch (e) {
+    next();
+  }
+};
+
+const checkVerified = () => (req, res, next) => {
+  if (req.verified) {
+    next();
+  } else {
+    onNoAuth({ res });
+  }
+};
+
 const app = express();
 
-app.use(
-  session({
-    store: sessionStore,
-    secret: SESSION_SECRET,
-    name: SESSION_NAME,
-    resave: false,
-    saveUninitialized: true
-  })
-);
+app.use(cookieParser());
 
 app.use(installAuth);
 
-const onNoAuth = args => {
-  args.res.redirect(authFailUrl);
-};
+app.get('/authenticate', (req, res) => {
+  const authed =
+    req.query.hmac &&
+    ShopifyAuth.checkIntegrity(SHOPIFY_API_SECRET_KEY, req.query);
 
-const secureMiddleware = () =>
-  LOCAL
-    ? async (req, res, next) => next()
-    : verifyHmac(SHOPIFY_API_SECRET_KEY, onNoAuth);
+  if (!authed) {
+    onNoAuth({ res });
+  } else {
+    const { shop } = req.query;
+    const token = jwt.sign({ shop }, SECRET_KEY);
 
-app.all(`/${secureDir}/*`, secureMiddleware());
+    res.cookie('token', token, { httpOnly: true });
+    res.cookie('shop', shop, { httpOnly: true });
+
+    res.redirect(`${baseUrl}/${secureDir}/${homePage}`);
+  }
+});
+
+app.all(`/${secureDir}/*`, verifyToken(), checkVerified());
 
 app.use(
   `/${secureDir}`,
   express.static(path.join(__dirname, distPath, secureDir))
 );
-
-app.get('/success', verifyInstalled(onNoAuth), (req, res) => {
-  res.redirect(adminUrl(req.session.shopify.shop));
-});
 
 app.get('/fail', (req, res) => {
   res.sendStatus(404);

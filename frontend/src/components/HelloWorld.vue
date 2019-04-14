@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
     <h1 :title="nice_twice">{{ nice_twice }}</h1>
-    <div @click="setNice('it worked')">oh right</div>
+    <div @click="setNice('it worked')">oh right sweet</div>
     <p>
       For a guide and recipes on how to configure / customize this project,<br />
       check out the

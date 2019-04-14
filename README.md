@@ -3,12 +3,10 @@
 A `.env` file with the following the format:
 
 ```bash
-export DYNAMO_REGION='xxxx'
 export LOCAL='xxxx'
-export SESSION_NAME='xxxx'
-export SESSION_SECRET='xxxx'
 export SHOPIFY_API_KEY='xxxx'
 export SHOPIFY_API_SECRET_KEY='xxxx'
+export SECRET_KEY='xxxx'
 ```
 
 An AWS Lambda function (consumes output of `source zipper.sh`).

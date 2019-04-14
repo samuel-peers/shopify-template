@@ -4,21 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build-backend": "cd backend && webpack",
+    "run-frontend": "cd frontend && vue-cli-service serve",
+    "run-backend": "nodemon backend/dist/server-build.js",
+    "watch-backend": "cd backend && webpack -w",
     "build-frontend": "cd frontend && vue-cli-service build",
-    "backend-server": "cd backend && node-hot --config webpack.config.js",
-    "frontend-server": "cd frontend && vue-cli-service serve",
+    "build-backend": "cd backend && webpack",
     "build": "npm run build-backend && npm run build-frontend",
     "lint": "eslint 'src/**/*.{js,vue}'"
   },
   "dependencies": {
     "aws-serverless-express": "^3.3.5",
     "axios": "^0.18.0",
-    "connect-dynamodb": "^2.0.3",
+    "cookie-parser": "^1.4.4",
     "express": "^4.16.4",
-    "express-session": "^1.15.6",
     "express-shopify-auth": "0.0.5",
     "hiredis": "^0.5.0",
+    "jsonwebtoken": "^8.5.1",
     "vue": "^2.6.6"
   },
   "devDependencies": {
@@ -33,7 +34,7 @@
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-prettier": "^3.0.1",
     "eslint-plugin-vue": "^5.0.0",
-    "node-hot-loader": "^1.12.3",
+    "nodemon": "^1.18.10",
     "prettier": "^1.16.4",
     "vue-eslint-parser": "^6.0.3",
     "vue-template-compiler": "^2.5.21",

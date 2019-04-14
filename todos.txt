@@ -21,17 +21,17 @@
 - [x] static security
 - [x] redis session
 - [x] redis security group
-- [] actual session security
-- [] better session secret key
+- [x] actual session security
+- [x] better session secret key
+- [x] store store name with session
+- [x] delete old sessions
 - [] node debugging
 - [x] return 404s on rejection
 - [x] just res.sendstatus instead of redirect
 - [x] will my redis sessions be destroyed on exit or something? nope
-- [] delete old sessions?
 - [x] is babel config needed?
 - [] does everything still work when updating lambda?
 - [] a name
-- [] somehow unify lambda .env and local .env
 - [] redirect to shopify admin or promo site on unauthed path
 - [x] run .env in npm run backend-server
 - [x] redis ami
@@ -40,7 +40,14 @@ use roles instead somehow?
 https://medium.com/@lakshmanLD/resolving-cold-start%EF%B8%8F-in-aws-lambda-804512ca9b61
 MODIFY SECURITY GROUP TO ALLOW ALL TRAFFIC FROM VPC https://stackoverflow.com/questions/40774585/aws-lambda-access-to-rds-outside-vpc
 never mind goddammit just try dynamo instead
-- [] hotloader writing a million update.js files https://github.com/gaearon/react-hot-loader/issues/456
+- [x] hotloader writing a million update.js files https://github.com/gaearon/react-hot-loader/issues/456
 consider alternatives https://webpack.js.org/configuration/watch/#watchoptions-poll + nodemon
-- [] cookie: {httpOnly: true} makes sessions unaccessible in apigateway/lambda
-- [] single initial html file with app.js and css etc
+- [x] cookie: {httpOnly: true} makes sessions unaccessible in apigateway/lambda
+- [x] single initial html file with app.js and css etc
+- [] track usage
+- [x] use jwt for auth instead of session
+- [] make sure jwt works in lambda
+- [x] delete all those old gateways
+- [] make the zip smaller? 7.7 mb is a lot
+- [] study cookie security
+- [] save accesstoken shop name to db

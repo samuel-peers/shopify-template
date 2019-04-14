@@ -1,7 +1,11 @@
 tmux new -d -s dev;
-tmux new -d -s backend-server;
-tmux new -d -s frontend-server;
+tmux new -d -s watch-backend;
+tmux new -d -s run-backend;
+tmux new -d -s run-frontend;
 tmux send-keys -t dev "cd ${PWD}" Enter;
-tmux send-keys -t backend-server "cd ${PWD}" Enter;
-tmux send-keys -t backend-server "npm run backend-server" Enter;
-tmux a -t backend-server;
+tmux send-keys -t watch-backend "cd ${PWD}" Enter;
+tmux send-keys -t watch-backend "npm run watch-backend" Enter;
+tmux send-keys -t run-backend "cd ${PWD}" Enter;
+tmux send-keys -t run-backend "source .env" Enter;
+tmux send-keys -t run-backend "npm run run-backend" Enter;
+tmux a -t run-backend;
