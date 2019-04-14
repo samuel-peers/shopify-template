@@ -22,11 +22,6 @@ Resources:
         Api2:
           Type: Api
           Properties:
-            Path: /
-            Method: GET
-        Api3:
-          Type: Api
-          Properties:
             Path: '/{proxy+}'
             Method: ANY
       Environment:
