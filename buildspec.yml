@@ -4,12 +4,6 @@ phases:
     commands:
       - npm install
       - npm run build
-      - chmod +x zipper.sh
-      - ./zipper.sh
-      - export BUCKET=lambda-deployment-artifacts-123456789012
-      - aws cloudformation package --template-file template.yaml --s3-bucket $BUCKET --output-template-file outputtemplate.yaml
-artifacts:
-  type: zip
-  files:
-    - template.yaml
-    - outputtemplate.yaml
+      - export LAMBDA_FUNCTION_NAME=to-delete-lambda-function
+      - chmod +x deploy.sh
+      - ./deploy.sh
