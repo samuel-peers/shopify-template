@@ -1,5 +1,4 @@
 // https://4a1jqd8qfk.execute-api.us-west-2.amazonaws.com/test/auth?shop=samuelpeers-test-store.myshopify.com
-// https://8517a8c7.ngrok.io/auth?shop=samuelpeers-test-store.myshopify.com
 import path from 'path';
 import express from 'express';
 import ShopifyAuth from 'express-shopify-auth';

@@ -46,7 +46,7 @@ consider alternatives https://webpack.js.org/configuration/watch/#watchoptions-p
 - [x] single initial html file with app.js and css etc
 - [] track usage
 - [x] use jwt for auth instead of session
-- [] make sure jwt works in lambda
+- [X] make sure jwt works in lambda
 - [x] delete all those old gateways
 - [] make the zip smaller? 7.7 mb is a lot
 - [] study cookie security

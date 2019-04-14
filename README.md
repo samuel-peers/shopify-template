@@ -1,17 +1,22 @@
 #### Requirements
 
-A `.env` file with the following the format:
+- A `.env` file with the following format:
 
 ```bash
+export LAMBDA_FUNCTION_NAME='xxxx'
 export LOCAL='xxxx'
 export SHOPIFY_API_KEY='xxxx'
 export SHOPIFY_API_SECRET_KEY='xxxx'
 export SECRET_KEY='xxxx'
 ```
 
-An AWS Lambda function (consumes output of `source zipper.sh`).
+- An AWS Lambda function + API Gateway (iac to come) (with name `LAMBDA_FUNCTION_NAME`)
 
-A Redis server (follow the setup guide [here](https://medium.com/@feliperohdee/installing-redis-to-an-aws-ec2-machine-2e2c4c443b68)).
+- An AWS user with Lambda policy to deploy
+
+- Git flow (`sudo apt-get install git-flow`)
+
+- `aws-cli` (`pip3 install awscli --upgrade --user`) (more installation options [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html))
 
 #### Install
 
@@ -19,19 +24,24 @@ A Redis server (follow the setup guide [here](https://medium.com/@feliperohdee/i
 npm install
 ```
 
-Known npm package issues: https://github.com/NodeRedis/node_redis/issues/790
-
 #### Compile and hotload frontend:
 
 ```
-npm run frontend-server
+npm run run-frontend
 // Go to localhost:8080
 ```
 
-#### Compile and run backend server (no hotloading yet):
+#### Compile and watch backend:
 
 ```
-npm run backend-server
+npm run watch-backend
+// Go to localhost:3000
+```
+
+#### Run backend server:
+
+```
+npm run run-backend
 // Go to localhost:3000
 ```
 
@@ -47,10 +57,11 @@ npm run build
 source tmux.sh
 ```
 
-#### Zip for cloud consumption:
+#### Deploy:
 
 ```
-source zipper.sh
+source deploy.sh
+// uses $LAMBDA_FUNCTION_NAME
 ```
 
 #### Customize Vue configuration
