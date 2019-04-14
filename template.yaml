@@ -7,7 +7,7 @@ Resources:
     Properties:
       Handler: backend/dist/lambda-build.handler
       Runtime: nodejs8.10
-      CodeUri: .
+      CodeUri: ./output.zip
       Description: ''
       MemorySize: 128
       Timeout: 3
