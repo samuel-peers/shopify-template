@@ -45,7 +45,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-receive": "npm run build && ./.env && ./deploy.sh"
+      "pre-receive": "echo 'hisam'"
     }
   }
 }

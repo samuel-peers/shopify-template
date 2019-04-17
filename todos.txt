@@ -48,7 +48,7 @@ consider alternatives https://webpack.js.org/configuration/watch/#watchoptions-p
 - [x] use jwt for auth instead of session
 - [X] make sure jwt works in lambda
 - [x] delete all those old gateways
-- [] make the zip smaller? 7.7 mb is a lot
+- [x] make the zip smaller? 7.7 mb is a lot
 - [] study cookie security
 - [] save accesstoken shop name to db
 - [] cloudformation or terraform
