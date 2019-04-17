@@ -45,7 +45,7 @@
   },
   "husky": {
     "hooks": {
-      "post-receive": "npm run build && ./.env && ./deploy.sh"
+      "pre-receive": "npm run build && ./.env && ./deploy.sh"
     }
   }
 }
