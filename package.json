@@ -45,7 +45,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-receive": "echo 'hisam'"
+      "post-receive": "echo 'hisam'"
     }
   }
 }
