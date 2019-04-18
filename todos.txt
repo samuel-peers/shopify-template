@@ -52,5 +52,6 @@ consider alternatives https://webpack.js.org/configuration/watch/#watchoptions-p
 - [] study cookie security
 - [] save accesstoken shop name to db
 - [] cloudformation or terraform
-- [] git hooks instead of gayass codebuild
-- [] deploy.sh should run npm build
+- [x] git hooks instead of deadass codebuild
+- [x] deploy.sh should run npm build
+- [] actual safe deploy script (can't risk pushing to wrong lambda)

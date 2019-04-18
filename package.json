@@ -45,7 +45,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "echo 'hisam'"
+      "pre-push": "./deploy.sh"
     }
   }
 }
