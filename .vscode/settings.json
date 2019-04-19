@@ -1,0 +1,25 @@
+{
+  "editor.formatOnSave": true,
+
+  "vetur.validation.template": false,
+  "vetur.format.defaultFormatter.scss": "prettier",
+  "vetur.format.defaultFormatter.css": "prettier",
+  "vetur.format.defaultFormatter.js": "prettier",
+  "vetur.format.defaultFormatter.html": "prettier",
+
+  "prettier.eslintIntegration": true,
+  "prettier.singleQuote": true,
+
+  "eslint.autoFixOnSave": false,
+  "eslint.options": { "extensions": [".html", ".js", ".vue"] },
+  "eslint.validate": [
+    "javascript",
+    {
+      "language": "vue",
+      "autoFix": true
+    }
+  ],
+
+  "javascript.validate.enable": false,
+  "javascript.format.enable": false
+}

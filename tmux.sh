@@ -8,4 +8,5 @@ tmux send-keys -t watch-backend "npm run watch-backend" Enter;
 tmux send-keys -t run-backend "cd ${PWD}" Enter;
 tmux send-keys -t run-backend "source .env" Enter;
 tmux send-keys -t run-backend "npm run run-backend" Enter;
+tmux send-keys -t run-frontend "npm run run-frontend" Enter;
 tmux a -t run-backend;

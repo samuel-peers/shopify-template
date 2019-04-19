@@ -1,9 +1,0 @@
-version: 0.2
-phases:
-  install:
-    commands:
-      - npm install
-      - npm run build
-      - export LAMBDA_FUNCTION_NAME=to-delete-lambda-function
-      - chmod +x deploy.sh
-      - ./deploy.sh
