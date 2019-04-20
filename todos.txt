@@ -54,10 +54,10 @@ consider alternatives https://webpack.js.org/configuration/watch/#watchoptions-p
 - [] cloudformation or terraform
 - [x] git hooks instead of deadass codebuild
 - [x] deploy.sh should run npm build
-- [] actual safe deploy script (can't risk pushing to wrong lambda)
+- [x] actual safe deploy script (can't risk pushing to wrong lambda)
 - [x] weird eslint flip flopping
 - [] sass + bem
 - [] freaking double quotes in vue files
 - [x] hotloading noooot working for 
 - [] local auth
-- [] test stage 
+- [x] test stage 
