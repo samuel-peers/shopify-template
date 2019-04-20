@@ -4,7 +4,7 @@
 
 ```bash
 export LAMBDA_FUNCTION_NAME='xxxx'
-export LOCAL='xxxx'
+export BASE_URL='xxxx'
 export SHOPIFY_API_KEY='xxxx'
 export SHOPIFY_API_SECRET_KEY='xxxx'
 export SECRET_KEY='xxxx'
