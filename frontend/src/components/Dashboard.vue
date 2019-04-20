@@ -1,13 +1,25 @@
 <template>
   <div class="dashboard">
-    <h1 :title="computed_count" class="dashboard__header">
-      {{ computed_count }}
+    <h1 class="dashboard__header">
+      {{ toggleService.state.value }}
     </h1>
-    <div @click="increment()">{{ msg }}</div>
+    <div @click="toggleState()">
+      {{ msg }}
+    </div>
   </div>
 </template>
 
 <script>
+import { Machine, interpret } from "xstate";
+
+const toggleMachine = Machine({
+  initial: "inactive",
+  states: {
+    inactive: { on: { TOGGLE: "active" } },
+    active: { on: { TOGGLE: "inactive" } }
+  }
+});
+
 export default {
   name: "Dashboard",
   props: {
@@ -18,22 +30,15 @@ export default {
   },
   data() {
     return {
-      count: 0
+      toggleService: null
     };
   },
-  computed: {
-    computed_count: {
-      get() {
-        return this.count;
-      },
-      set(newValue) {
-        this.count = newValue;
-      }
-    }
+  mounted() {
+    this.toggleService = interpret(toggleMachine).start();
   },
   methods: {
-    increment() {
-      this.count = this.count + 1;
+    toggleState() {
+      this.toggleService.send("TOGGLE");
     }
   }
 };
