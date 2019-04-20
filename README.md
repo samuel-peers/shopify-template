@@ -3,7 +3,6 @@
 - A `.env` file with the following format:
 
 ```bash
-export LAMBDA_FUNCTION_NAME='xxxx'
 export BASE_URL='xxxx'
 export STAGE='xxxx'
 export SHOPIFY_API_KEY='xxxx'
@@ -11,7 +10,7 @@ export SHOPIFY_API_SECRET_KEY='xxxx'
 export SECRET_KEY='xxxx'
 ```
 
-- An AWS Lambda function + API Gateway (iac to come) (with name `LAMBDA_FUNCTION_NAME`)
+- An AWS Lambda function + API Gateway (iac to come) (with lambda name `magnet-lambda-function-[STAGE]`)
 
 - An AWS user with Lambda policy to deploy
 
@@ -62,7 +61,6 @@ source tmux.sh
 
 ```
 source deploy.sh
-// uses $LAMBDA_FUNCTION_NAME
 ```
 
 #### Customize Vue configuration
