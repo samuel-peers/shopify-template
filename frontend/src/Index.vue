@@ -1,7 +1,7 @@
 <template>
   <div id="index">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <Dashboard msg="Here we omifuckingdog cat"/>
+    <img alt="Vue logo" src="./assets/logo.png" />
+    <Dashboard msg="here we go" />
   </div>
 </template>
 

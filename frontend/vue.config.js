@@ -4,11 +4,5 @@ module.exports = {
   configureWebpack: {
     mode: 'development',
     devtool: 'source-map'
-  },
-  devServer: {
-    proxy: 'http://localhost:8080',
-    watchOptions: {
-      poll: true
-    }
   }
 };
