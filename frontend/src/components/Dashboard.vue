@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard">
     <h1 class="dashboard__header">
-      {{ toggleService.state.value }}
+      {{ state }}
     </h1>
     <div @click="toggleState()">
       {{ msg }}
@@ -12,8 +12,10 @@
 <script>
 import { Machine, interpret } from "xstate";
 
+const initialState = "inactive";
+
 const toggleMachine = Machine({
-  initial: "inactive",
+  initial: initialState,
   states: {
     inactive: { on: { TOGGLE: "active" } },
     active: { on: { TOGGLE: "inactive" } }
@@ -30,15 +32,18 @@ export default {
   },
   data() {
     return {
-      toggleService: null
+      toggleService: null,
+      state: initialState
     };
   },
   mounted() {
-    this.toggleService = interpret(toggleMachine).start();
+    const service = interpret(toggleMachine).start();
+    this.toggleService = service;
+    this.state = service.state.value;
   },
   methods: {
     toggleState() {
-      this.toggleService.send("TOGGLE");
+      this.state = this.toggleService.send("TOGGLE").value;
     }
   }
 };
