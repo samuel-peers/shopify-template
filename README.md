@@ -5,6 +5,7 @@
 ```bash
 export LAMBDA_FUNCTION_NAME='xxxx'
 export BASE_URL='xxxx'
+export STAGE='xxxx'
 export SHOPIFY_API_KEY='xxxx'
 export SHOPIFY_API_SECRET_KEY='xxxx'
 export SECRET_KEY='xxxx'

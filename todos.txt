@@ -59,3 +59,4 @@ consider alternatives https://webpack.js.org/configuration/watch/#watchoptions-p
 - [] sass + bem
 - [] freaking double quotes in vue files
 - [x] hotloading noooot working for 
+- [] local auth 

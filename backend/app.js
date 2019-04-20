@@ -1,4 +1,3 @@
-// https://qyyte4o0g9.execute-api.us-west-2.amazonaws.com/release/auth?shop=samuelpeers-test-store.myshopify.com
 import path from 'path';
 import express from 'express';
 import ShopifyAuth from 'express-shopify-auth';
@@ -9,17 +8,20 @@ const {
   SHOPIFY_API_SECRET_KEY,
   SHOPIFY_API_KEY,
   BASE_URL,
+  STAGE,
   SECRET_KEY
 } = process.env;
 
-const authFailUrl = `${BASE_URL}/fail`;
+const baseUrl = `${BASE_URL}/${STAGE}`;
+
+const authFailUrl = `${baseUrl}/fail`;
 
 const onNoAuth = args => {
   args.res.redirect(authFailUrl);
 };
 
 const adminUrl = shop => `https://${shop}/admin/apps/${SHOPIFY_API_KEY}`;
-const redirectUrl = `${BASE_URL}/auth/callback`;
+const redirectUrl = `${baseUrl}/auth/callback`;
 const authPath = '/auth';
 const authCallbackPath = '/auth/callback';
 const scope = ['read_products'];
@@ -31,7 +33,7 @@ const noShopMsg = 'No shop query';
 const badShopMsg = 'Bad shop hostname';
 
 const installAuth = ShopifyAuth.create({
-  BASE_URL,
+  baseUrl,
   redirectUrl,
   authPath,
   authCallbackPath,
@@ -97,7 +99,7 @@ app.get('/authenticate', (req, res) => {
     res.cookie('token', token, { httpOnly: true });
     res.cookie('shop', shop, { httpOnly: true });
 
-    res.redirect(`${BASE_URL}/${secureDir}/${homePage}`);
+    res.redirect(`${baseUrl}/${secureDir}/${homePage}`);
   }
 });
 
