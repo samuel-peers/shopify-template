@@ -1,4 +1,5 @@
 #!/bin/bash 
+
 RELEASE_BRANCH="master"
 DEV_BRANCH="develop"
 RELEASE_STAGE="release"
@@ -23,6 +24,8 @@ then
 fi
 
 LAMBDA_FUNCTION_NAME="$LAMBDA_FUNCTION_NAME-$STAGE"
+
+exec < /dev/tty
 
 read -p "Release to $LAMBDA_FUNCTION_NAME? (Y/N): " confirm
 
