@@ -9,10 +9,11 @@ const {
   SHOPIFY_API_KEY,
   BASE_URL,
   STAGE,
-  SECRET_KEY
+  SECRET_KEY,
+  LOCAL
 } = process.env;
 
-const baseUrl = `${BASE_URL}/${STAGE}`;
+const baseUrl = `${BASE_URL}${STAGE ? `/${STAGE}` : ''}`;
 
 const authFailUrl = `${baseUrl}/fail`;
 
@@ -79,6 +80,9 @@ const checkVerified = () => (req, res, next) => {
   }
 };
 
+const secure = () =>
+  LOCAL ? (req, res, next) => next() : [verifyToken(), checkVerified()];
+
 const app = express();
 
 app.use(cookieParser());
@@ -90,7 +94,11 @@ app.get('/authenticate', (req, res) => {
     req.query.hmac &&
     ShopifyAuth.checkIntegrity(SHOPIFY_API_SECRET_KEY, req.query);
 
-  if (!authed) {
+  const onAuth = () => res.redirect(`${baseUrl}/${secureDir}/${homePage}`);
+
+  if (LOCAL) {
+    onAuth();
+  } else if (!authed) {
     onNoAuth({ res });
   } else {
     const { shop } = req.query;
@@ -99,11 +107,11 @@ app.get('/authenticate', (req, res) => {
     res.cookie('token', token, { httpOnly: true });
     res.cookie('shop', shop, { httpOnly: true });
 
-    res.redirect(`${baseUrl}/${secureDir}/${homePage}`);
+    onAuth();
   }
 });
 
-app.all(`/${secureDir}/*`, verifyToken(), checkVerified());
+app.all(`/${secureDir}/*`, secure());
 
 app.use(
   `/${secureDir}`,
