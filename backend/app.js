@@ -3,6 +3,10 @@ import express from 'express';
 import ShopifyAuth from 'express-shopify-auth';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
+import buildDynamo from './dynamo';
+import buildModel from './model';
+
+const myModel = buildModel(buildDynamo());
 
 const {
   SHOPIFY_API_SECRET_KEY,
@@ -51,8 +55,7 @@ const installAuth = ShopifyAuth.create({
     return done(errMsg, req.query.shop);
   },
   onAuth(req, res, shop, accessToken) {
-    // TODO save (shop, accessToken) to persistence
-    console.log(accessToken);
+    myModel.putAccessToken(shop, accessToken);
     res.redirect(adminUrl(shop));
   }
 });

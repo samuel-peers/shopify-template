@@ -32,7 +32,8 @@
 - [x] is babel config needed?
 - [] does everything still work when updating lambda?
 - [] a name
-- [] redirect to shopify admin or promo site on unauthed path
+- [x] a codename
+- [] redirect to shopify admin or promo site on unauthed path => landing page
 - [x] run .env in npm run backend-server
 - [x] redis ami
 - [x] lambda cold start. https://medium.freecodecamp.org/lambda-vpc-cold-starts-a-latency-killer-5408323278dd
@@ -50,7 +51,7 @@ consider alternatives https://webpack.js.org/configuration/watch/#watchoptions-p
 - [x] delete all those old gateways
 - [x] make the zip smaller? 7.7 mb is a lot
 - [] study cookie security
-- [] save accesstoken shop name to db
+- [x] save accesstoken shop name to db
 - [] cloudformation or terraform
 - [x] git hooks instead of deadass codebuild
 - [x] deploy.sh should run npm build
@@ -59,6 +60,10 @@ consider alternatives https://webpack.js.org/configuration/watch/#watchoptions-p
 - [] sass + bem
 - [] freaking double quotes in vue files
 - [x] hotloading noooot working for 
-- [] local auth
+- [x] local auth
 - [x] test stage
 - [] vscode ext recommendations
+- [] local lambda testing. sam something?
+- [] easier way to install => landing page
+- [] fix lint npm command
+- [] lint pre commit hook
