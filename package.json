@@ -10,7 +10,7 @@
     "build-frontend": "cd frontend && vue-cli-service build",
     "build-backend": "cd backend && webpack",
     "build": "npm run build-backend && npm run build-frontend",
-    "lint": "eslint 'src/**/*.{js,vue}'"
+    "lint": "eslint 'frontend/src/**/*.{js,vue}' && eslint 'backend/src/**/*.js'"
   },
   "dependencies": {
     "aws-serverless-express": "^3.3.5",

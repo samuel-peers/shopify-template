@@ -1,11 +1,13 @@
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 
+const srcDir = './src';
+
 module.exports = {
   mode: 'production',
   entry: {
-    server: './server.js',
-    lambda: './lambda.js'
+    server: `${srcDir}/server.js`,
+    lambda: `${srcDir}/lambda.js`
   },
   output: {
     path: path.join(__dirname, 'dist'),

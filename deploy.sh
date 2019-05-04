@@ -13,12 +13,12 @@ CURR_BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null)
 
 STAGE=
 
-if [ $CURR_BRANCH == *"feature/"* ]
+if [[ $CURR_BRANCH == *"feature/"* ]]
 then
     STAGE=$TEST_STAGE
 fi
 
-if [ $CURR_BRANCH == *"release/"* ]
+if [[ $CURR_BRANCH == *"release/"* ]]
 then
     STAGE=$STAGING_STAGE
 fi
