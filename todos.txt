@@ -67,3 +67,5 @@ consider alternatives https://webpack.js.org/configuration/watch/#watchoptions-p
 - [] easier way to install => landing page
 - [] fix lint npm command
 - [] lint pre commit hook
+- [] update deploy.sh so it releases to test on feature/ branch and stagin on
+     release/ branch

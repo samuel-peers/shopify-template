@@ -64,6 +64,21 @@ source tmux.sh
 source deploy.sh
 ```
 
+Pushing to remote also triggers `deploy.sh`.
+
+Add the `--no-verify` flag to skip deployment:
+
+```
+git push --no-verify origin [branch]
+```
+
+`deploy.sh` will deploy to the following lambda functions based on the current branch:
+
+- `master = magnet-lambda-function-release`
+- `develop = magnet-lambda-function-dev`
+- `release/* = magnet-lambda-function-staging`
+- `feature/* = magnet-lambda-function-test`
+
 #### Customize Vue configuration
 
 See [Configuration Reference](https://cli.vuejs.org/config/)
