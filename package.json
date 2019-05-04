@@ -46,6 +46,7 @@
   },
   "husky": {
     "hooks": {
+      "pre-commit": "npm run lint",
       "pre-push": "./deploy.sh"
     }
   }
