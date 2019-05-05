@@ -20,3 +20,5 @@ frontend/yarn-error.log*
 
 output.zip
 .env
+
+todos.txt
