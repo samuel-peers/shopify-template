@@ -60,12 +60,12 @@ consider alternatives https://webpack.js.org/configuration/watch/#watchoptions-p
 - [] sass + bem
 - [] freaking double quotes in vue files
 - [x] hotloading noooot working for 
-- [x] local auth
+- [] local auth
 - [x] test stage
 - [] vscode ext recommendations
 - [] local lambda testing. sam something?
 - [] easier way to install => landing page
-- [] fix lint npm command
-- [] lint pre commit hook
+- [x] fix lint npm command
+- [x] lint pre commit hook
 - [x] update deploy.sh so it releases to test on feature/ branch and stagin on
      release/ branch

@@ -3,26 +3,36 @@ import AWS from 'aws-sdk';
 const dynamodb = new AWS.DynamoDB({ region: 'us-west-2' });
 const tableName = 'magnet-dynamodb';
 
-const buildDynamo = () => ({
-  getAccessToken: async storeName => {
+const getDynamo = () => ({
+  getAccessToken: async shop => {
     const params = {
+      ProjectionExpression: 'accessToken',
       TableName: tableName,
       Key: {
         store: {
-          S: storeName
+          S: shop
         }
       }
     };
 
-    return dynamodb.getItem(params).promise();
+    return dynamodb
+      .getItem(params)
+      .promise()
+      .then(
+        ({
+          Item: {
+            accessToken: { S }
+          }
+        }) => S
+      );
   },
 
-  putAccessToken: (storeName, accessToken) => {
+  putAccessToken: (shop, accessToken) => {
     const putparams = {
       TableName: tableName,
       Item: {
         store: {
-          S: storeName
+          S: shop
         },
         accessToken: {
           S: accessToken
@@ -37,4 +47,4 @@ const buildDynamo = () => ({
   }
 });
 
-export default buildDynamo;
+export default getDynamo;

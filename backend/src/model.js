@@ -1,8 +1,9 @@
-const buildModel = db => ({
-  putAccessToken: (storeName, accessToken) =>
-    db.putAccessToken(storeName, accessToken),
+export const getAccessModel = db => ({
+  putAccessToken: (shop, accessToken) => db.putAccessToken(shop, accessToken),
 
-  getAccessToken: storeName => db.getAccessToken(storeName)
+  getAccessToken: shop => db.getAccessToken(shop)
 });
 
-export default buildModel;
+export const getAdminModel = db => ({
+  getProducts: (shop, accessToken) => db.getProducts(shop, accessToken)
+});

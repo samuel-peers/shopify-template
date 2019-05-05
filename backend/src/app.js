@@ -3,10 +3,10 @@ import express from 'express';
 import ShopifyAuth from 'express-shopify-auth';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
-import buildDynamo from './dynamo';
-import buildModel from './model';
+import getDynamo from './dynamo';
+import { getAccessModel } from './model';
 
-const myModel = buildModel(buildDynamo());
+const accessModel = getAccessModel(getDynamo());
 
 const {
   SHOPIFY_API_SECRET_KEY,
@@ -55,16 +55,16 @@ const installAuth = ShopifyAuth.create({
     return done(errMsg, req.query.shop);
   },
   onAuth(req, res, shop, accessToken) {
-    myModel.putAccessToken(shop, accessToken);
+    accessModel.putAccessToken(shop, accessToken);
     res.redirect(adminUrl(shop));
   }
 });
 
 const verifyToken = () => (req, res, next) => {
   try {
-    const { token } = req.cookies;
+    const { jwtToken } = req.cookies;
 
-    jwt.verify(token, SECRET_KEY, err => {
+    jwt.verify(jwtToken, SECRET_KEY, err => {
       if (!err) {
         req.verified = true;
       }
@@ -92,7 +92,7 @@ app.use(cookieParser());
 
 app.use(installAuth);
 
-app.get('/authenticate', (req, res) => {
+app.get('/authenticate', async (req, res) => {
   const authed =
     req.query.hmac &&
     ShopifyAuth.checkIntegrity(SHOPIFY_API_SECRET_KEY, req.query);
@@ -105,10 +105,13 @@ app.get('/authenticate', (req, res) => {
     onNoAuth({ res });
   } else {
     const { shop } = req.query;
-    const token = jwt.sign({ shop }, SECRET_KEY);
+    const jwtToken = jwt.sign({ shop }, SECRET_KEY);
 
-    res.cookie('token', token, { httpOnly: true });
+    const accessToken = await accessModel.getAccessToken(shop);
+
     res.cookie('shop', shop, { httpOnly: true });
+    res.cookie('jwtToken', jwtToken, { httpOnly: true });
+    res.cookie('accessToken', accessToken, { httpOnly: true });
 
     onAuth();
   }
