@@ -5,6 +5,9 @@ const tableName = 'magnet-dynamodb';
 
 const getDynamo = () => ({
   getAccessToken: async shop => {
+    const errorMsg = `AccessToken not found for ${shop}`;
+    let result = null;
+
     const params = {
       ProjectionExpression: 'accessToken',
       TableName: tableName,
@@ -15,19 +18,22 @@ const getDynamo = () => ({
       }
     };
 
-    return dynamodb
-      .getItem(params)
-      .promise()
-      .then(
-        ({
-          Item: {
-            accessToken: { S }
-          }
-        }) => S
-      );
+    try {
+      const {
+        Item: {
+          accessToken: { S }
+        }
+      } = await dynamodb.getItem(params).promise();
+      result = S;
+    } catch (error) {
+      console.error(errorMsg, error);
+    }
+
+    return result;
   },
 
   putAccessToken: (shop, accessToken) => {
+    const errorMsg = `Failed to put accessToken for ${shop}`;
     const putparams = {
       TableName: tableName,
       Item: {
@@ -40,10 +46,14 @@ const getDynamo = () => ({
       }
     };
 
-    dynamodb.putItem(putparams, (err, data) => {
-      if (err) console.log(err, err.stack);
-      else console.log(data);
-    });
+    try {
+      dynamodb.putItem(putparams, (err, data) => {
+        if (err) console.log(err, err.stack);
+        else console.log(data);
+      });
+    } catch (error) {
+      console.error(errorMsg, error);
+    }
   }
 });
 

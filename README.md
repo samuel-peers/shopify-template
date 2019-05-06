@@ -9,6 +9,7 @@ export SHOPIFY_API_KEY='xxxx'
 export SHOPIFY_API_SECRET_KEY='xxxx'
 export SECRET_KEY='xxxx'
 export LOCAL='xxxx'
+export LOCAL_TEST_STORE='xxxx'
 ```
 
 - An AWS Lambda function + API Gateway (iac to come) (with lambda name `magnet-lambda-function-[STAGE]`)

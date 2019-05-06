@@ -14,16 +14,13 @@ const {
   BASE_URL,
   STAGE,
   SECRET_KEY,
-  LOCAL
+  LOCAL,
+  LOCAL_TEST_STORE
 } = process.env;
 
 const baseUrl = `${BASE_URL}${STAGE ? `/${STAGE}` : ''}`;
 
 const authFailUrl = `${baseUrl}/fail`;
-
-const onNoAuth = args => {
-  args.res.redirect(authFailUrl);
-};
 
 const adminUrl = shop => `https://${shop}/admin/apps/${SHOPIFY_API_KEY}`;
 const redirectUrl = `${baseUrl}/auth/callback`;
@@ -60,31 +57,28 @@ const installAuth = ShopifyAuth.create({
   }
 });
 
+const onNoAuth = res => {
+  res.redirect(authFailUrl);
+};
+
 const verifyToken = () => (req, res, next) => {
   try {
     const { jwtToken } = req.cookies;
 
     jwt.verify(jwtToken, SECRET_KEY, err => {
       if (!err) {
-        req.verified = true;
+        next();
+      } else {
+        onNoAuth(res);
       }
-      next();
     });
   } catch (e) {
-    next();
+    onNoAuth(res);
   }
 };
 
-const checkVerified = () => (req, res, next) => {
-  if (req.verified) {
-    next();
-  } else {
-    onNoAuth({ res });
-  }
-};
-
-const secure = () =>
-  LOCAL ? (req, res, next) => next() : [verifyToken(), checkVerified()];
+const secureMiddleware = () =>
+  LOCAL ? (req, res, next) => next() : verifyToken();
 
 const app = express();
 
@@ -94,30 +88,33 @@ app.use(installAuth);
 
 app.get('/authenticate', async (req, res) => {
   const authed =
-    req.query.hmac &&
-    ShopifyAuth.checkIntegrity(SHOPIFY_API_SECRET_KEY, req.query);
+    LOCAL ||
+    (req.query.hmac &&
+      ShopifyAuth.checkIntegrity(SHOPIFY_API_SECRET_KEY, req.query));
 
   const onAuth = () => res.redirect(`${baseUrl}/${secureDir}/${homePage}`);
 
-  if (LOCAL) {
-    onAuth();
-  } else if (!authed) {
-    onNoAuth({ res });
-  } else {
-    const { shop } = req.query;
+  if (!authed) {
+    onNoAuth(res);
+  } else if (authed) {
+    const shop = LOCAL ? LOCAL_TEST_STORE : req.query.shop;
     const jwtToken = jwt.sign({ shop }, SECRET_KEY);
 
     const accessToken = await accessModel.getAccessToken(shop);
 
-    res.cookie('shop', shop, { httpOnly: true });
-    res.cookie('jwtToken', jwtToken, { httpOnly: true });
-    res.cookie('accessToken', accessToken, { httpOnly: true });
+    if (!accessToken) {
+      onNoAuth(res);
+    } else {
+      res.cookie('shop', shop, { httpOnly: true });
+      res.cookie('jwtToken', jwtToken, { httpOnly: true });
+      res.cookie('accessToken', accessToken, { httpOnly: true });
 
-    onAuth();
+      onAuth();
+    }
   }
 });
 
-app.all(`/${secureDir}/*`, secure());
+app.all(`/${secureDir}/*`, secureMiddleware());
 
 app.use(
   `/${secureDir}`,
