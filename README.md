@@ -3,7 +3,6 @@
 - A `.env` file with the following format:
 
 ```bash
-export BASE_URL='xxxx'
 export STAGE='xxxx'
 export SHOPIFY_API_KEY='xxxx'
 export SHOPIFY_API_SECRET_KEY='xxxx'

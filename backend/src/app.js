@@ -1,29 +1,27 @@
 import path from 'path';
 import express from 'express';
-import ShopifyAuth from 'express-shopify-auth';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
+import { getInstallMiddleware, checkIntegrity } from './install';
 import getDynamo from './dynamo';
 import { getAccessModel } from './model';
 
 const accessModel = getAccessModel(getDynamo());
 
 const {
+  STAGE,
   SHOPIFY_API_SECRET_KEY,
   SHOPIFY_API_KEY,
-  BASE_URL,
-  STAGE,
   SECRET_KEY,
   LOCAL,
   LOCAL_TEST_STORE
 } = process.env;
 
-const baseUrl = `${BASE_URL}${STAGE ? `/${STAGE}` : ''}`;
-
-const authFailUrl = `${baseUrl}/fail`;
+const prefix = STAGE ? `/${STAGE}` : '';
 
 const adminUrl = shop => `https://${shop}/admin/apps/${SHOPIFY_API_KEY}`;
-const redirectUrl = `${baseUrl}/auth/callback`;
+const authFailUrl = `${prefix}/fail`;
+const redirectPath = `${prefix}/auth/callback`;
 const authPath = '/auth';
 const authCallbackPath = '/auth/callback';
 const scope = ['read_products'];
@@ -31,27 +29,15 @@ const distPath = '../../frontend/dist';
 const secureDir = 'secure';
 const homePage = 'index.html';
 
-const noShopMsg = 'No shop query';
-const badShopMsg = 'Bad shop hostname';
-
-const installAuth = ShopifyAuth.create({
-  baseUrl,
-  redirectUrl,
+const installAuth = getInstallMiddleware({
+  redirectPath,
   authPath,
   authCallbackPath,
   authFailUrl,
   scope,
-  authSuccessUrl: '',
   appKey: SHOPIFY_API_KEY,
   appSecret: SHOPIFY_API_SECRET_KEY,
-  shop(req, done) {
-    let errMsg = !req.query.shop && noShopMsg;
-    errMsg =
-      errMsg || (!ShopifyAuth.checkShopHostname(req.query.shop) && badShopMsg);
-
-    return done(errMsg, req.query.shop);
-  },
-  onAuth(req, res, shop, accessToken) {
+  onAuth: (req, res, shop, accessToken) => {
     accessModel.putAccessToken(shop, accessToken);
     res.redirect(adminUrl(shop));
   }
@@ -89,10 +75,9 @@ app.use(installAuth);
 app.get('/authenticate', async (req, res) => {
   const authed =
     LOCAL ||
-    (req.query.hmac &&
-      ShopifyAuth.checkIntegrity(SHOPIFY_API_SECRET_KEY, req.query));
+    (req.query.hmac && checkIntegrity(SHOPIFY_API_SECRET_KEY, req.query));
 
-  const onAuth = () => res.redirect(`${baseUrl}/${secureDir}/${homePage}`);
+  const onAuth = () => res.redirect(`${prefix}/${secureDir}/${homePage}`);
 
   if (!authed) {
     onNoAuth(res);
