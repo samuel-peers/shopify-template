@@ -47,9 +47,10 @@ const getDynamo = () => ({
     };
 
     try {
-      dynamodb.putItem(putparams, (err, data) => {
-        if (err) console.log(err, err.stack);
-        else console.log(data);
+      dynamodb.putItem(putparams, err => {
+        if (err) {
+          console.error(err, err.stack);
+        }
       });
     } catch (error) {
       console.error(errorMsg, error);

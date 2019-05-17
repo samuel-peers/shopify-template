@@ -18,7 +18,7 @@ const getShopifyRest = () => ({
 
     return callRest(getUrl(shop, path), 'get', accessToken)
       .then(({ data: { themes } }) => themes)
-      .catch(err => console.log(err));
+      .catch(err => console.error(err));
   },
 
   setTheme: (shop, accessToken, themeId, value, key) => {
@@ -32,7 +32,7 @@ const getShopifyRest = () => ({
     };
 
     return callRest(getUrl(shop, path), 'put', accessToken, data).catch(err =>
-      console.log(err)
+      console.error(err)
     );
   }
 });
