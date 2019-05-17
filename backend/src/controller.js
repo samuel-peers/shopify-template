@@ -3,8 +3,12 @@ import { getAdminModel } from './model';
 
 const adminModel = getAdminModel(getShopifyRest());
 
-export const setTheme = async (shop, accessToken, value, key) => {
-  let success = true;
+export const setTheme = async (shop, accessToken, id, value, key) => {
+  await adminModel.setTheme(shop, accessToken, id, value, key);
+};
+
+export const getMainTheme = async (shop, accessToken) => {
+  let id = -1;
 
   const noMainMsg = 'No main theme found';
 
@@ -12,21 +16,28 @@ export const setTheme = async (shop, accessToken, value, key) => {
 
   const main = themes.find(({ role }) => role === 'main');
 
-  if (!main) {
-    success = false;
+  if (main) {
     console.error(noMainMsg);
   } else {
-    const { id } = main;
-
-    await adminModel.setTheme(shop, accessToken, id, value, key);
+    ({ id } = main);
   }
 
-  return success;
+  return id;
 };
 
 export const setProductTheme = async (shop, accessToken) => {
+  let success = true;
+
   const value = '<div>test value</div>';
   const key = 'templates/product.liquid';
 
-  return setTheme(shop, accessToken, value, key);
+  const id = await getMainTheme(shop, accessToken);
+
+  if (id === -1) {
+    success = false;
+  } else {
+    setTheme(shop, accessToken, id, value, key);
+  }
+
+  return success;
 };
