@@ -1,9 +1,12 @@
-export const getAccessModel = db => ({
-  putAccessToken: (shop, accessToken) => db.putAccessToken(shop, accessToken),
-
-  getAccessToken: shop => db.getAccessToken(shop)
+export const getAccessModel = endpoint => ({
+  putAccessToken: (shop, accessToken) =>
+    endpoint.putAccessToken(shop, accessToken),
+  getAccessToken: shop => endpoint.getAccessToken(shop)
 });
 
-export const getAdminModel = db => ({
-  getProducts: (shop, accessToken) => db.getProducts(shop, accessToken)
+export const getAdminModel = endpoint => ({
+  getProducts: (shop, accessToken) => endpoint.getProducts(shop, accessToken),
+  getThemes: (shop, accessToken) => endpoint.getThemes(shop, accessToken),
+  setTheme: (shop, accessToken, themeId, value, assetKey) =>
+    endpoint.setTheme(shop, accessToken, themeId, value, assetKey)
 });

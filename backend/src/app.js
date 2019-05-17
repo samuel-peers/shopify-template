@@ -3,8 +3,9 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 import { getInstallMiddleware, checkIntegrity } from './install';
-import getDynamo from './dynamo';
+import getDynamo from './endpoints/dynamo';
 import { getAccessModel } from './model';
+import { setProductTheme } from './controller';
 
 const accessModel = getAccessModel(getDynamo());
 
@@ -24,7 +25,7 @@ const authFailUrl = `${prefix}/fail`;
 const redirectPath = `${prefix}/auth/callback`;
 const authPath = '/auth';
 const authCallbackPath = '/auth/callback';
-const scope = ['read_products'];
+const scope = ['read_products', 'read_themes', 'write_themes'];
 const distPath = '../../frontend/dist';
 const secureDir = 'secure';
 const homePage = 'index.html';
@@ -39,6 +40,7 @@ const installAuth = getInstallMiddleware({
   appSecret: SHOPIFY_API_SECRET_KEY,
   onAuth: (req, res, shop, accessToken) => {
     accessModel.putAccessToken(shop, accessToken);
+    setProductTheme(shop, accessToken);
     res.redirect(adminUrl(shop));
   }
 });

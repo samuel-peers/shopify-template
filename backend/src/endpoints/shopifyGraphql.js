@@ -15,7 +15,7 @@ const callGraphql = (url, accessToken, query) =>
     }
   });
 
-const getGraphql = () => ({
+const getShopifyGraphql = () => ({
   getProducts: (shop, accessToken) =>
     callGraphql(
       getUrl(shop),
@@ -43,4 +43,4 @@ const getGraphql = () => ({
     )
 });
 
-export default getGraphql;
+export default getShopifyGraphql;
