@@ -4,7 +4,7 @@ const dynamodb = new AWS.DynamoDB({ region: 'us-west-2' });
 const tableName = 'magnet-dynamodb';
 
 const getDynamo = () => ({
-  getAccessToken: async shop => {
+  getToken: async shop => {
     const errorMsg = `AccessToken not found for ${shop}`;
     let result = null;
 
@@ -32,7 +32,7 @@ const getDynamo = () => ({
     return result;
   },
 
-  putAccessToken: (shop, accessToken) => {
+  putToken: (shop, accessToken) => {
     const errorMsg = `Failed to put accessToken for ${shop}`;
     const putparams = {
       TableName: tableName,

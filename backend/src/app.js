@@ -2,12 +2,16 @@ import path from 'path';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
-import { getInstallMiddleware, checkIntegrity } from './install';
-import getDynamo from './endpoints/dynamo';
-import { getAccessModel } from './model';
-import { setProductTheme } from './controller';
+import { getInstallMiddleware, checkIntegrity } from './business/install';
+import getDynamo from './persistence/dynamo';
+import { getTokenAccess, getThemeAccess } from './business/dataAccess';
+import getThemeController from './business/themeController';
+import getShopifyRest from './persistence/rest';
 
-const accessModel = getAccessModel(getDynamo());
+const tokenAccess = getTokenAccess(getDynamo());
+const themeAccess = getThemeAccess(getShopifyRest());
+
+const themeController = getThemeController(themeAccess);
 
 const {
   STAGE,
@@ -39,8 +43,8 @@ const installAuth = getInstallMiddleware({
   appKey: SHOPIFY_API_KEY,
   appSecret: SHOPIFY_API_SECRET_KEY,
   onAuth: (req, res, shop, accessToken) => {
-    accessModel.putAccessToken(shop, accessToken);
-    setProductTheme(shop, accessToken);
+    tokenAccess.putToken(shop, accessToken);
+    themeController.setProductTheme(shop, accessToken);
     res.redirect(adminUrl(shop));
   }
 });
@@ -87,7 +91,7 @@ app.get('/authenticate', async (req, res) => {
     const shop = LOCAL ? LOCAL_TEST_STORE : req.query.shop;
     const jwtToken = jwt.sign({ shop }, SECRET_KEY);
 
-    const accessToken = await accessModel.getAccessToken(shop);
+    const accessToken = await tokenAccess.getToken(shop);
 
     if (!accessToken) {
       onNoAuth(res);
