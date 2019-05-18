@@ -16,7 +16,7 @@ export const getMainTheme = async (shop, accessToken) => {
 
   const main = themes.find(({ role }) => role === 'main');
 
-  if (main) {
+  if (!main) {
     console.error(noMainMsg);
   } else {
     ({ id } = main);
