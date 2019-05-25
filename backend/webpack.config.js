@@ -1,5 +1,6 @@
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
+const TerserPlugin = require('terser-webpack-plugin');
 
 const srcDir = './src';
 
@@ -14,7 +15,7 @@ const scriptTags = {
   },
   target: 'node',
   optimization: {
-    minimize: false
+    minimizer: [new TerserPlugin()]
   }
 };
 
