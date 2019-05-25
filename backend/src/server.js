@@ -1,5 +1,5 @@
 import http from 'http';
-import app from './app';
+import app from './business/app';
 
 const server = http.createServer(app);
 let currentApp = app;

@@ -2,11 +2,11 @@ import path from 'path';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
-import { getInstallMiddleware, checkIntegrity } from './business/install';
-import getDynamo from './persistence/dynamo';
-import { getTokenAccess, getScriptTagAccess } from './business/dataAccess';
-import getThemeAccess from './business/themeAccess';
-import getShopifyRest from './persistence/rest';
+import { getInstallMiddleware, checkIntegrity } from './install';
+import getDynamo from '../persistence/dynamo';
+import { getTokenAccess, getScriptTagAccess } from './dataAccess';
+import getThemeAccess from './themeAccess';
+import getShopifyRest from '../persistence/rest';
 
 const tokenAccess = getTokenAccess(getDynamo());
 const themeAccess = getThemeAccess(getShopifyRest());
