@@ -3,7 +3,22 @@ const nodeExternals = require('webpack-node-externals');
 
 const srcDir = './src';
 
-module.exports = {
+const scriptTags = {
+  mode: 'production',
+  entry: {
+    index: `${srcDir}/scriptTags.js`
+  },
+  output: {
+    path: path.join(__dirname, 'dist', 'script_tags'),
+    filename: '[name].js'
+  },
+  target: 'node',
+  optimization: {
+    minimize: false
+  }
+};
+
+const servers = {
   mode: 'production',
   entry: {
     server: `${srcDir}/server.js`,
@@ -31,3 +46,5 @@ module.exports = {
     })
   ]
 };
+
+module.exports = [scriptTags, servers];

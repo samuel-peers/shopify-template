@@ -16,11 +16,18 @@
     "es6": true,
     "node": true
   },
+  "ecmaFeatures": {
+    "destructuring": true,
+    "spread": true
+  },
   "rules": {
     "max-len": ["error", { "code": 80 }],
     "no-console": 0,
     "vue/component-name-in-template-casing": ["error", "PascalCase"],
     "no-underscore-dangle": ["error", { "allowAfterThis": true }],
-    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/test/**/*.js", "**/*.test.js"]}]
+    "import/no-extraneous-dependencies": [
+      "error",
+      { "devDependencies": ["**/test/**/*.js", "**/*.test.js"] }
+    ]
   }
 }

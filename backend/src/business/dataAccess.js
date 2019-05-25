@@ -3,12 +3,16 @@ export const getTokenAccess = endpoint => ({
   getToken: shop => endpoint.getToken(shop)
 });
 
-export const getThemeAccess = endpoint => ({
-  getThemes: (shop, accessToken) => endpoint.getThemes(shop, accessToken),
-  setTheme: (shop, accessToken, themeId, value, assetKey) =>
-    endpoint.setTheme(shop, accessToken, themeId, value, assetKey)
-});
-
 export const getProductAccess = endpoint => ({
   getProducts: (shop, accessToken) => endpoint.getProducts(shop, accessToken)
 });
+
+export const getScriptTagAccess = endpoint => {
+  const setScriptTag = (shop, accessToken, event, src) => {
+    endpoint.setScriptTag(shop, accessToken, event, src);
+  };
+
+  return {
+    setScriptTag
+  };
+};
