@@ -1,3 +1,5 @@
+Most of the scaffolding needed for making a Shopify app using Vue, Express, GraphQL, and AWS Lambda.
+
 #### Requirements
 
 - Remove the `sample` part of the filename `.sample.env` and fill in values
