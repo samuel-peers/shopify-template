@@ -27,7 +27,6 @@ npm run run-frontend
 
 ```
 npm run watch-backend
-// Go to localhost:3000
 ```
 
 #### Run backend server:
