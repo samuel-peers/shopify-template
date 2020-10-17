@@ -56,6 +56,28 @@ const getDynamo = () => ({
       console.error(errorMsg, error);
     }
   },
+
+  deleteToken: (shop) => {
+    const errorMsg = `Failed to delete accessToken for ${shop}`;
+    const params = {
+      TableName: tableName,
+      Key: {
+        store: {
+          S: shop,
+        },
+      },
+    };
+
+    try {
+      dynamodb.deleteItem(params, (err) => {
+        if (err) {
+          console.error(err, err.stack);
+        }
+      });
+    } catch (error) {
+      console.error(errorMsg, error);
+    }
+  },
 });
 
 module.exports = getDynamo;

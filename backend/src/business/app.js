@@ -3,9 +3,11 @@ const path = require('path');
 const express = require('express');
 const url = require('url');
 const jwt = require('jsonwebtoken');
+const getRawBody = require('raw-body');
 const cookieParser = require('cookie-parser');
 const { getInstallMiddleware, checkIntegrity } = require('./install');
 const getDynamo = require('../persistence/dynamo');
+const { registerWebhook, validateWebhook } = require('./webhooks');
 const { getTokenAccess } = require('./dataAccess');
 
 const tokenAccess = getTokenAccess(getDynamo());
@@ -15,6 +17,7 @@ const {
   SHOPIFY_API_SECRET_KEY,
   SHOPIFY_API_KEY,
   SECRET_KEY,
+  HOST,
 } = process.env;
 
 const prefix = STAGE ? `/${STAGE}` : '';
@@ -30,8 +33,21 @@ const frontendRoute = 'secure';
 const frontendPath = `../../../frontend/dist/${frontendRoute}`;
 const homePage = 'index.html';
 
-const onAuth = (req, res, shop, accessToken) => {
+const onAuth = async (req, res, shop, accessToken) => {
   tokenAccess.putToken(shop, accessToken);
+
+  const registration = await registerWebhook({
+    address: `${HOST}/uninstall`,
+    topic: 'APP_UNINSTALLED',
+    accessToken,
+    shop,
+    apiVersion: '2020-10',
+  });
+
+  if (!registration.success) {
+    console.error('Failed to register webhook', registration.result);
+  }
+
   res.redirect(adminUrl(shop));
 };
 
@@ -73,6 +89,17 @@ const app = express();
 app.use(cookieParser());
 
 app.use(installAuth);
+
+app.post('/uninstall', async (req) => {
+  const hmac = req.header('X-Shopify-Hmac-Sha256');
+  const shop = req.header('X-Shopify-Shop-Domain');
+
+  const body = await getRawBody(req);
+
+  if (validateWebhook(SHOPIFY_API_SECRET_KEY, body, hmac)) {
+    tokenAccess.deleteToken(shop);
+  }
+});
 
 app.get('/install', async (req, res) => {
   const hmacAuthed =

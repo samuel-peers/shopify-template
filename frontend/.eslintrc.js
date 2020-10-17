@@ -36,5 +36,6 @@ module.exports = {
     'no-console': 'off',
     'implicit-arrow-linebreak': 'off',
     'linebreak-style': ['error', 'unix'],
+    'arrow-body-style': ['error', 'as-needed'],
   },
 };

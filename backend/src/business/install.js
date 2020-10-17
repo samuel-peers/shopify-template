@@ -41,9 +41,7 @@ const validShopHostname = (hostname) => {
 };
 
 const exchangeCodeForToken = (
-  {
-    shopDomain, appKey, appSecret, code,
-  },
+  { shopDomain, appKey, appSecret, code },
   onErr,
   onSuccess,
 ) => {
@@ -100,18 +98,17 @@ const handleCallbackPath = ({
   cache,
   onError,
 }) => {
-  console.log('handleCallbackPath');
   let result;
   const params = req.query;
 
   if (
     !(
-      params
-      && params.code
-      && params.hmac
-      && params.timestamp
-      && params.state
-      && params.shop
+      params &&
+      params.code &&
+      params.hmac &&
+      params.timestamp &&
+      params.state &&
+      params.shop
     )
   ) {
     const paramErr = new Error(
@@ -156,10 +153,6 @@ const handleCallbackPath = ({
     );
   }
 
-  console.log('result');
-  console.log(result);
-  console.log();
-
   return result;
 };
 
@@ -172,7 +165,6 @@ const handleAuthPath = ({
   scope,
   appKey,
 }) => {
-  console.log('handleAuthPath');
   const noShopMsg = 'No shop query';
   const badShopMsg = 'Bad shop hostname';
 
@@ -233,8 +225,6 @@ const getInstallMiddleware = ({
     let result;
 
     if (req.path !== authPath && req.path !== authCallbackPath) {
-      console.log(req.path);
-      console.log('neither auth path!!!');
       result = next();
     }
 

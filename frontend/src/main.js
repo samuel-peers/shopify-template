@@ -4,5 +4,5 @@ import Index from './Index.vue';
 Vue.config.productionTip = false;
 
 new Vue({
-  render: h => h(Index)
+  render: h => h(Index),
 }).$mount('#index');

@@ -6,7 +6,8 @@
   "scripts": {
     "start": "nodemon src/server.js",
     "build": "webpack",
-    "lint": "eslint 'src/**/*.js'"
+    "lint": "eslint 'src/**/*.js'",
+    "plint": "prettier src/business/webhooks.js"
   },
   "dependencies": {
     "aws-sdk": "^2.437.0",
