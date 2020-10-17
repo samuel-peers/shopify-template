@@ -4,33 +4,29 @@ module.exports = {
     es6: true,
     mocha: true,
   },
-  extends: ["airbnb-base", "prettier", "eslint:recommended"],
+  extends: ['airbnb-base', 'prettier', 'eslint:recommended'],
   globals: {
-    Atomics: "readonly",
-    SharedArrayBuffer: "readonly",
+    Atomics: 'readonly',
+    SharedArrayBuffer: 'readonly',
     fetch: false,
     document: false,
   },
   overrides: [
     {
-      files: ["*.test.js"],
+      files: ['*.test.js'],
       rules: {
-        "no-unused-expressions": "off",
+        'no-unused-expressions': 'off',
       },
     },
   ],
   parserOptions: {
     ecmaVersion: 2019,
-    sourceType: "module",
+    sourceType: 'module',
   },
   rules: {
-    "max-len": ["error", { code: 80 }],
-    "no-console": "off",
-    "no-unused-vars": ["error", { vars: "all", args: "after-used" }],
-    "implicit-arrow-linebreak": "off",
-    indent: ["error", 2],
-    "linebreak-style": ["error", "unix"],
-    quotes: ["error", "single"],
-    semi: ["error", "always"],
+    'max-len': ['error', { code: 80 }],
+    'no-console': 'off',
+    'implicit-arrow-linebreak': 'off',
+    'linebreak-style': ['error', 'unix'],
   },
 };
