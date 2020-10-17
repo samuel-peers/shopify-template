@@ -26,16 +26,7 @@ const authFailUrl = `${prefix}/fail`;
 const redirectPath = `${prefix}/auth/callback`;
 const authPath = '/auth';
 const authCallbackPath = '/auth/callback';
-const scope = [
-  'read_products',
-  'read_themes',
-  'write_themes',
-  'read_script_tags',
-  'write_script_tags',
-];
-
-const scriptTagRoute = 'script_tags';
-const scriptTagPath = `../dist/${scriptTagRoute}`;
+const scope = ['read_products'];
 
 const frontendRoute = 'secure';
 const frontendPath = `../../../frontend/dist/${frontendRoute}`;
@@ -124,13 +115,6 @@ app.all(`/${frontendRoute}/*`, secureMiddleware());
 app.use(
   `/${frontendRoute}`,
   express.static(path.join(__dirname, frontendPath)),
-);
-
-app.all(`${scriptTagRoute}/*`, secureMiddleware());
-
-app.use(
-  `/${scriptTagRoute}`,
-  express.static(path.join(__dirname, scriptTagPath)),
 );
 
 app.get('/fail', (req, res) => {

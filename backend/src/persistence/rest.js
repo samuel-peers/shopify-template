@@ -15,7 +15,7 @@ const callRest = (url, method, accessToken, data = null) =>
 const getShopifyRest = () => {
   const get = (shop, accessToken, path) =>
     callRest(getUrl(shop, path), 'get', accessToken)
-      .then(({ data: { themes } }) => themes)
+      .then((result) => result)
       .catch(console.error);
 
   return { get };

@@ -1,23 +1,7 @@
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
-const TerserPlugin = require('terser-webpack-plugin');
 
 const srcDir = './src';
-
-const scriptTags = {
-  mode: 'production',
-  entry: {
-    index: `${srcDir}/scriptTags.js`,
-  },
-  output: {
-    path: path.join(__dirname, 'dist', 'script_tags'),
-    filename: '[name].js',
-  },
-  target: 'node',
-  optimization: {
-    minimizer: [new TerserPlugin()],
-  },
-};
 
 const servers = {
   mode: 'production',
@@ -47,4 +31,4 @@ const servers = {
   ],
 };
 
-module.exports = [scriptTags, servers];
+module.exports = [servers];
