@@ -15,8 +15,6 @@ const {
   SHOPIFY_API_SECRET_KEY,
   SHOPIFY_API_KEY,
   SECRET_KEY,
-  LOCAL,
-  LOCAL_TEST_STORE,
 } = process.env;
 
 const prefix = STAGE ? `/${STAGE}` : '';
@@ -68,8 +66,7 @@ const verifyToken = () => (req, res, next) => {
   }
 };
 
-const secureMiddleware = () =>
-  (LOCAL ? (req, res, next) => next() : verifyToken());
+const secureMiddleware = () => verifyToken();
 
 const app = express();
 
@@ -78,13 +75,13 @@ app.use(cookieParser());
 app.use(installAuth);
 
 app.get('/install', async (req, res) => {
-  const hmacAuthed = LOCAL
-    || (req.query.hmac && checkIntegrity(SHOPIFY_API_SECRET_KEY, req.query));
+  const hmacAuthed =
+    req.query.hmac && checkIntegrity(SHOPIFY_API_SECRET_KEY, req.query);
 
   if (!hmacAuthed) {
     onNoAuth(res);
   } else if (hmacAuthed) {
-    const shop = LOCAL ? LOCAL_TEST_STORE : req.query.shop;
+    const { shop } = req.query;
 
     const accessToken = await tokenAccess.getToken(shop);
 

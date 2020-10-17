@@ -4,7 +4,7 @@ module.exports = {
     es6: true,
     mocha: true,
   },
-  extends: ["airbnb-base", "eslint:recommended"],
+  extends: ["airbnb-base", "prettier", "eslint:recommended"],
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly",
@@ -20,7 +20,7 @@ module.exports = {
     },
   ],
   parserOptions: {
-    ecmaVersion: 11,
+    ecmaVersion: 2019,
     sourceType: "module",
   },
   rules: {
