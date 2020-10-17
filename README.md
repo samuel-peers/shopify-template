@@ -6,48 +6,55 @@
 
 - An AWS user with Lambda policy to deploy
 
-- Git flow (`sudo apt-get install git-flow`)
-
 - `aws-cli` (`pip3 install awscli --upgrade --user`) (more installation options [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html))
 
-#### Install
+#### Backend development
 
 ```
+cd backend
 npm install
+npm start
+// Listening on localhost:3000
 ```
 
-#### Compile and hotload frontend:
+#### Frontend development:
 
 ```
-npm run run-frontend
-// Go to localhost:8080
+cd frontend
+npm install
+npm start
+// Listening on localhost:8081
 ```
 
-#### Compile and watch backend:
+#### Shopify App Development
+
+To start working on this app in Shopify:
+
+1. `cd backend && npm start` to the start the dev server on port `3000`
+
+2. `npm install -g ngrok && ngrok http 3000` to expose the server to the outside world
+
+3. Login to `partners.shopify.com`
+
+4. `Apps` > `Create App`
+
+5. Name your app and set:
 
 ```
-npm run watch-backend
-// Go to localhost:3000
+# App Url
+https://[hostname provided by ngrok]/authenticate
+
+# Allowed redirection URL(s)
+https://[hostname provided by ngrok]/auth/callback
 ```
 
-#### Run backend server:
+6. Create your `.env` file: `cp .sample.env .env`
 
-```
-npm run run-backend
-// Go to localhost:3000
-```
+7. Copy the `API key` from the Shopify dashboard to `SHOPIPY_API_KEY`
 
-#### Compile frontend and backend server
+8. Copy the `API secret key` from the Shopify dashboard to `SHOPIPY_API_SECRET_KEY`
 
-```
-npm run build
-```
-
-#### To run all the above steps in tmux sessions:
-
-```
-source tmux.sh
-```
+7. Click `Test your app` and install the app on your test store
 
 #### Deploy:
 

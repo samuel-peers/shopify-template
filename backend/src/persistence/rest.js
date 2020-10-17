@@ -1,4 +1,4 @@
-import axios from 'axios';
+const axios = require('axios');
 
 const getUrl = (shop, path) => `https://${shop}/admin/api/2019-04/${path}`;
 
@@ -8,8 +8,8 @@ const callRest = (url, method, accessToken, data = null) =>
     method,
     data,
     headers: {
-      'X-Shopify-Access-Token': accessToken
-    }
+      'X-Shopify-Access-Token': accessToken,
+    },
   });
 
 const getShopifyRest = () => {
@@ -35,12 +35,12 @@ const getShopifyRest = () => {
     const data = {
       asset: {
         value,
-        key
-      }
+        key,
+      },
     };
 
     return callRest(getUrl(shop, path), 'put', accessToken, data).catch(
-      console.error
+      console.error,
     );
   };
 
@@ -50,12 +50,12 @@ const getShopifyRest = () => {
     const data = {
       script_tag: {
         event,
-        src
-      }
+        src,
+      },
     };
 
     return callRest(getUrl(shop, path), 'post', accessToken, data).catch(
-      console.error
+      console.error,
     );
   };
 
@@ -63,8 +63,8 @@ const getShopifyRest = () => {
     getThemes,
     getTheme,
     setTheme,
-    setScriptTag
+    setScriptTag,
   };
 };
 
-export default getShopifyRest;
+module.exports = getShopifyRest;

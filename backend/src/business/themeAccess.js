@@ -1,4 +1,4 @@
-const getThemeAccess = endpoint => {
+const getThemeAccess = (endpoint) => {
   const getMainTheme = async (shop, accessToken, key) => {
     let result = null;
 
@@ -15,7 +15,7 @@ const getThemeAccess = endpoint => {
         shop,
         accessToken,
         mainThemeDatum.id,
-        key
+        key,
       );
     }
 
@@ -33,7 +33,7 @@ const getThemeAccess = endpoint => {
       success = false;
     } else {
       const {
-        asset: { value, theme_id: themeId }
+        asset: { value, theme_id: themeId },
       } = mainTheme;
 
       const newValue = `${value}\n${appendValue}`;
@@ -55,8 +55,8 @@ const getThemeAccess = endpoint => {
   return {
     appendProductTheme,
     addProductList,
-    getMainTheme
+    getMainTheme,
   };
 };
 
-export default getThemeAccess;
+module.exports = getThemeAccess;

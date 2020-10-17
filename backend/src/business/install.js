@@ -1,20 +1,19 @@
-import crypto from 'crypto';
-import url from 'url';
-import request from 'request';
-import Cache from 'lru-cache';
+const crypto = require('crypto');
+const url = require('url');
+const request = require('request');
+const Cache = require('lru-cache');
 
-const DOMAIN = 'myshopify.com';
-const INVALID_CHAR_RE = /[^0-9a-zA-Z.-]/;
+const DEFAULT_SHOPIFY_HOSTNAME = 'myshopify.com';
 const CACHE_MAX = 5000;
 const MAX_AGE = 1000 * 60 * 5;
 
-export const checkIntegrity = (appSecret, params) => {
+const checkIntegrity = (appSecret, params) => {
   const { hmac } = params;
 
   const message = Object.keys(params)
-    .filter(key => key !== 'hmac' && key !== 'signature')
+    .filter((key) => key !== 'hmac' && key !== 'signature')
     .sort()
-    .map(key => {
+    .map((key) => {
       const escapedKey = key
         .replace('%', '%25')
         .replace('&', '%26')
@@ -32,26 +31,29 @@ export const checkIntegrity = (appSecret, params) => {
   return ourSignature === hmac;
 };
 
-const checkShopHostname = hostname => {
-  const hasInvalidChar = INVALID_CHAR_RE.test(hostname);
-  const hasRightDomain =
-    hostname.substring(hostname.length - DOMAIN.length) === DOMAIN;
+const validShopHostname = (hostname) => {
+  const shopRegex = new RegExp(
+    `^[a-z0-9][a-z0-9\\-]*[a-z0-9]\\.${DEFAULT_SHOPIFY_HOSTNAME}$`,
+    'i',
+  );
 
-  return !hasInvalidChar && hasRightDomain;
+  return hostname != null && shopRegex.test(hostname);
 };
 
 const exchangeCodeForToken = (
-  { shopDomain, appKey, appSecret, code },
+  {
+    shopDomain, appKey, appSecret, code,
+  },
   onErr,
-  onSuccess
+  onSuccess,
 ) => {
   const opts = {
     url: `https://${shopDomain}/admin/oauth/access_token`,
     form: {
       code,
       client_id: appKey,
-      client_secret: appSecret
-    }
+      client_secret: appSecret,
+    },
   };
 
   request.post(opts, (err, res, body) => {
@@ -96,25 +98,26 @@ const handleCallbackPath = ({
   appSecret,
   onAuth,
   cache,
-  onError
+  onError,
 }) => {
+  console.log('handleCallbackPath');
   let result;
   const params = req.query;
 
   if (
     !(
-      params &&
-      params.code &&
-      params.hmac &&
-      params.timestamp &&
-      params.state &&
-      params.shop
+      params
+      && params.code
+      && params.hmac
+      && params.timestamp
+      && params.state
+      && params.shop
     )
   ) {
     const paramErr = new Error(
       `shopifyAuth: missing required query parameters (got ${Object.keys(
-        params
-      ).join(',')})`
+        params,
+      ).join(',')})`,
     );
     result = onError(paramErr);
   }
@@ -126,14 +129,14 @@ const handleCallbackPath = ({
 
   if (!checkIntegrity(appSecret, params)) {
     const integrityErr = new Error(
-      'shopifyAuth: integrity error (signature mismatch)'
+      'shopifyAuth: integrity error (signature mismatch)',
     );
     result = onError(integrityErr);
   }
 
-  if (!checkShopHostname(params.shop)) {
+  if (!validShopHostname(params.shop)) {
     const shopErr = new Error(
-      `shopifyAuth: invalid shop hostname \`${params.shop}\``
+      `shopifyAuth: invalid shop hostname \`${params.shop}\``,
     );
     result = onError(shopErr);
   }
@@ -143,15 +146,19 @@ const handleCallbackPath = ({
       appKey,
       appSecret,
       code: params.code,
-      shopDomain: params.shop
+      shopDomain: params.shop,
     };
 
     exchangeCodeForToken(
       exchangeOptions,
-      exchangeErr => onError(exchangeErr),
-      accessToken => onAuth(req, res, params.shop, accessToken)
+      (exchangeErr) => onError(exchangeErr),
+      (accessToken) => onAuth(req, res, params.shop, accessToken),
     );
   }
+
+  console.log('result');
+  console.log(result);
+  console.log();
 
   return result;
 };
@@ -163,15 +170,16 @@ const handleAuthPath = ({
   cache,
   onError,
   scope,
-  appKey
+  appKey,
 }) => {
+  console.log('handleAuthPath');
   const noShopMsg = 'No shop query';
   const badShopMsg = 'Bad shop hostname';
 
   let result;
 
   let errMsg = !shop && noShopMsg;
-  errMsg = errMsg || (!checkShopHostname(shop) && badShopMsg);
+  errMsg = errMsg || (!validShopHostname(shop) && badShopMsg);
 
   if (errMsg) {
     result = onError(errMsg);
@@ -187,8 +195,8 @@ const handleAuthPath = ({
       redirect_uri: redirectUri,
       client_id: appKey,
       scope: scope.join(','),
-      state: nonce
-    }
+      state: nonce,
+    },
   });
 
   result = res.redirect(redirectUrl);
@@ -196,7 +204,7 @@ const handleAuthPath = ({
   return result;
 };
 
-export const getInstallMiddleware = ({
+const getInstallMiddleware = ({
   authFailUrl,
   authPath,
   authCallbackPath,
@@ -204,15 +212,15 @@ export const getInstallMiddleware = ({
   scope,
   appSecret,
   onAuth,
-  redirectPath
+  redirectPath,
 }) => {
   const cache = new Cache({
     max: CACHE_MAX,
-    maxAge: MAX_AGE
+    maxAge: MAX_AGE,
   });
 
   const middleware = (req, res, next) => {
-    const onError = err => {
+    const onError = (err) => {
       if (err.stack) {
         console.error(err.stack);
       } else {
@@ -225,6 +233,8 @@ export const getInstallMiddleware = ({
     let result;
 
     if (req.path !== authPath && req.path !== authCallbackPath) {
+      console.log(req.path);
+      console.log('neither auth path!!!');
       result = next();
     }
 
@@ -240,7 +250,7 @@ export const getInstallMiddleware = ({
         cache,
         onError,
         scope,
-        appKey
+        appKey,
       });
     }
 
@@ -252,7 +262,7 @@ export const getInstallMiddleware = ({
         appSecret,
         onAuth,
         cache,
-        onError
+        onError,
       });
     }
 
@@ -261,3 +271,5 @@ export const getInstallMiddleware = ({
 
   return middleware;
 };
+
+module.exports = { checkIntegrity, getInstallMiddleware };

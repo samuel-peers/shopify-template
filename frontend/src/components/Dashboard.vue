@@ -10,24 +10,24 @@
 </template>
 
 <script>
-import { Machine, interpret } from "xstate";
+import { Machine, interpret } from 'xstate';
 
-const initialState = "inactive";
+const initialState = 'inactive';
 
 const toggleMachine = Machine({
   initial: initialState,
   states: {
-    inactive: { on: { TOGGLE: "active" } },
-    active: { on: { TOGGLE: "inactive" } }
+    inactive: { on: { TOGGLE: 'active' } },
+    active: { on: { TOGGLE: 'inactive' } }
   }
 });
 
 export default {
-  name: "Dashboard",
+  name: 'Dashboard',
   props: {
     msg: {
       type: String,
-      default: ""
+      default: ''
     }
   },
   data() {
@@ -43,7 +43,7 @@ export default {
   },
   methods: {
     toggleState() {
-      this.state = this.toggleService.send("TOGGLE").value;
+      this.state = this.toggleService.send('TOGGLE').value;
     }
   }
 };

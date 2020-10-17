@@ -1,16 +1,15 @@
-import path from 'path';
-import express from 'express';
-import jwt from 'jsonwebtoken';
-import cookieParser from 'cookie-parser';
-import { getInstallMiddleware, checkIntegrity } from './install';
-import getDynamo from '../persistence/dynamo';
-import { getTokenAccess, getScriptTagAccess } from './dataAccess';
-import getThemeAccess from './themeAccess';
-import getShopifyRest from '../persistence/rest';
+const path = require('path');
+const express = require('express');
+const url = require('url');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+const { getInstallMiddleware, checkIntegrity } = require('./install');
+const getDynamo = require('../persistence/dynamo');
+const { getTokenAccess } = require('./dataAccess');
+
+require('dotenv').config();
 
 const tokenAccess = getTokenAccess(getDynamo());
-const themeAccess = getThemeAccess(getShopifyRest());
-const scriptTagAccess = getScriptTagAccess(getShopifyRest());
 
 const {
   STAGE,
@@ -18,12 +17,12 @@ const {
   SHOPIFY_API_KEY,
   SECRET_KEY,
   LOCAL,
-  LOCAL_TEST_STORE
+  LOCAL_TEST_STORE,
 } = process.env;
 
 const prefix = STAGE ? `/${STAGE}` : '';
 
-const adminUrl = shop => `https://${shop}/admin/apps/${SHOPIFY_API_KEY}`;
+const adminUrl = (shop) => `https://${shop}/admin/apps/${SHOPIFY_API_KEY}`;
 const authFailUrl = `${prefix}/fail`;
 const redirectPath = `${prefix}/auth/callback`;
 const authPath = '/auth';
@@ -33,32 +32,23 @@ const scope = [
   'read_themes',
   'write_themes',
   'read_script_tags',
-  'write_script_tags'
+  'write_script_tags',
 ];
 
 const scriptTagRoute = 'script_tags';
 const scriptTagPath = `../dist/${scriptTagRoute}`;
-const scriptTagFile = 'index.js';
-const scriptTagSrc = (req, file) =>
-  `https://${req.get('host')}${prefix}/${scriptTagRoute}/${file}`;
 
 const frontendRoute = 'secure';
-const frontendPath = `../../frontend/dist/${frontendRoute}`;
+const frontendPath = `../../../frontend/dist/${frontendRoute}`;
 const homePage = 'index.html';
 
 const onAuth = (req, res, shop, accessToken) => {
   tokenAccess.putToken(shop, accessToken);
-
-  themeAccess.addProductList(shop, accessToken);
-
-  scriptTagAccess.setScriptTag(
-    shop,
-    accessToken,
-    'onload',
-    scriptTagSrc(req, scriptTagFile)
-  );
-
   res.redirect(adminUrl(shop));
+};
+
+const onNoAuth = (res) => {
+  res.redirect(authFailUrl);
 };
 
 const installAuth = getInstallMiddleware({
@@ -69,18 +59,14 @@ const installAuth = getInstallMiddleware({
   scope,
   onAuth,
   appKey: SHOPIFY_API_KEY,
-  appSecret: SHOPIFY_API_SECRET_KEY
+  appSecret: SHOPIFY_API_SECRET_KEY,
 });
-
-const onNoAuth = res => {
-  res.redirect(authFailUrl);
-};
 
 const verifyToken = () => (req, res, next) => {
   try {
     const { jwtToken } = req.cookies;
 
-    jwt.verify(jwtToken, SECRET_KEY, err => {
+    jwt.verify(jwtToken, SECRET_KEY, (err) => {
       if (!err) {
         next();
       } else {
@@ -93,7 +79,7 @@ const verifyToken = () => (req, res, next) => {
 };
 
 const secureMiddleware = () =>
-  LOCAL ? (req, res, next) => next() : verifyToken();
+  (LOCAL ? (req, res, next) => next() : verifyToken());
 
 const app = express();
 
@@ -102,21 +88,29 @@ app.use(cookieParser());
 app.use(installAuth);
 
 app.get('/authenticate', async (req, res) => {
-  const authed =
-    LOCAL ||
-    (req.query.hmac && checkIntegrity(SHOPIFY_API_SECRET_KEY, req.query));
+  const hmacAuthed = LOCAL
+    || (req.query.hmac && checkIntegrity(SHOPIFY_API_SECRET_KEY, req.query));
 
-  if (!authed) {
+  if (!hmacAuthed) {
     onNoAuth(res);
-  } else if (authed) {
+  } else if (hmacAuthed) {
     const shop = LOCAL ? LOCAL_TEST_STORE : req.query.shop;
-    const jwtToken = jwt.sign({ shop }, SECRET_KEY);
 
     const accessToken = await tokenAccess.getToken(shop);
 
     if (!accessToken) {
-      onNoAuth(res);
+      const redirectUrl = url.format({
+        protocol: 'https',
+        pathname: authPath,
+        query: {
+          shop,
+        },
+      });
+
+      res.redirect(redirectUrl);
     } else {
+      const jwtToken = jwt.sign({ shop }, SECRET_KEY);
+
       res.cookie('shop', shop, { httpOnly: true });
       res.cookie('jwtToken', jwtToken, { httpOnly: true });
       res.cookie('accessToken', accessToken, { httpOnly: true });
@@ -130,14 +124,14 @@ app.all(`/${frontendRoute}/*`, secureMiddleware());
 
 app.use(
   `/${frontendRoute}`,
-  express.static(path.join(__dirname, frontendPath))
+  express.static(path.join(__dirname, frontendPath)),
 );
 
 app.all(`${scriptTagRoute}/*`, secureMiddleware());
 
 app.use(
   `/${scriptTagRoute}`,
-  express.static(path.join(__dirname, scriptTagPath))
+  express.static(path.join(__dirname, scriptTagPath)),
 );
 
 app.get('/fail', (req, res) => {
@@ -148,4 +142,4 @@ app.all('/*', (req, res) => {
   res.sendStatus(404);
 });
 
-export default app;
+module.exports = app;

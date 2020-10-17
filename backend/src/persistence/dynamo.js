@@ -1,10 +1,10 @@
-import AWS from 'aws-sdk';
+const AWS = require('aws-sdk');
 
 const dynamodb = new AWS.DynamoDB({ region: 'us-west-2' });
 const tableName = 'magnet-dynamodb';
 
 const getDynamo = () => ({
-  getToken: async shop => {
+  getToken: async (shop) => {
     const errorMsg = `AccessToken not found for ${shop}`;
     let result = null;
 
@@ -13,16 +13,16 @@ const getDynamo = () => ({
       TableName: tableName,
       Key: {
         store: {
-          S: shop
-        }
-      }
+          S: shop,
+        },
+      },
     };
 
     try {
       const {
         Item: {
-          accessToken: { S }
-        }
+          accessToken: { S },
+        },
       } = await dynamodb.getItem(params).promise();
       result = S;
     } catch (error) {
@@ -38,16 +38,16 @@ const getDynamo = () => ({
       TableName: tableName,
       Item: {
         store: {
-          S: shop
+          S: shop,
         },
         accessToken: {
-          S: accessToken
-        }
-      }
+          S: accessToken,
+        },
+      },
     };
 
     try {
-      dynamodb.putItem(putparams, err => {
+      dynamodb.putItem(putparams, (err) => {
         if (err) {
           console.error(err, err.stack);
         }
@@ -55,7 +55,7 @@ const getDynamo = () => ({
     } catch (error) {
       console.error(errorMsg, error);
     }
-  }
+  },
 });
 
-export default getDynamo;
+module.exports = getDynamo;
