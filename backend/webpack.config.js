@@ -7,45 +7,44 @@ const srcDir = './src';
 const scriptTags = {
   mode: 'production',
   entry: {
-    index: `${srcDir}/scriptTags.js`
+    index: `${srcDir}/scriptTags.js`,
   },
   output: {
     path: path.join(__dirname, 'dist', 'script_tags'),
-    filename: '[name].js'
+    filename: '[name].js',
   },
   target: 'node',
   optimization: {
-    minimizer: [new TerserPlugin()]
-  }
+    minimizer: [new TerserPlugin()],
+  },
 };
 
 const servers = {
   mode: 'production',
   entry: {
-    server: `${srcDir}/server.js`,
-    lambda: `${srcDir}/lambda.js`
+    lambda: `${srcDir}/lambda.js`,
   },
   output: {
     path: path.join(__dirname, 'dist'),
     publicPath: '/',
     filename: '[name]-build.js',
     library: '',
-    libraryTarget: 'commonjs'
+    libraryTarget: 'commonjs',
   },
   target: 'node',
   node: {
     __dirname: false,
-    __filename: false
+    __filename: false,
   },
   optimization: {
-    minimize: false
+    minimize: false,
   },
   externals: [
     nodeExternals({
-      modulesDir: '../node_modules',
-      whitelist: [/^((?!aws-sdk).)*$/]
-    })
-  ]
+      modulesDir: 'node_modules',
+      whitelist: [/^((?!aws-sdk).)*$/],
+    }),
+  ],
 };
 
 module.exports = [scriptTags, servers];
