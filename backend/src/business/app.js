@@ -87,7 +87,7 @@ app.use(cookieParser());
 
 app.use(installAuth);
 
-app.get('/authenticate', async (req, res) => {
+app.get('/install', async (req, res) => {
   const hmacAuthed = LOCAL
     || (req.query.hmac && checkIntegrity(SHOPIFY_API_SECRET_KEY, req.query));
 

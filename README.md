@@ -44,7 +44,7 @@ To start working on this app in Shopify:
 
 ```
 # App Url
-https://[hostname provided by ngrok]/authenticate
+https://[hostname provided by ngrok]/install
 
 # Allowed redirection URL(s)
 https://[hostname provided by ngrok]/auth/callback
