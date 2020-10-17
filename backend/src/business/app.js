@@ -1,3 +1,4 @@
+require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const url = require('url');
@@ -6,8 +7,6 @@ const cookieParser = require('cookie-parser');
 const { getInstallMiddleware, checkIntegrity } = require('./install');
 const getDynamo = require('../persistence/dynamo');
 const { getTokenAccess } = require('./dataAccess');
-
-require('dotenv').config();
 
 const tokenAccess = getTokenAccess(getDynamo());
 
