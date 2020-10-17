@@ -13,58 +13,12 @@ const callRest = (url, method, accessToken, data = null) =>
   });
 
 const getShopifyRest = () => {
-  const getThemes = (shop, accessToken) => {
-    const path = 'themes.json';
-
-    return callRest(getUrl(shop, path), 'get', accessToken)
+  const get = (shop, accessToken, path) =>
+    callRest(getUrl(shop, path), 'get', accessToken)
       .then(({ data: { themes } }) => themes)
       .catch(console.error);
-  };
 
-  const getTheme = (shop, accessToken, themeId, key) => {
-    const path = `themes/${themeId}/assets.json?asset[key]=${key}`;
-
-    return callRest(getUrl(shop, path), 'get', accessToken)
-      .then(({ data }) => data)
-      .catch(console.error);
-  };
-
-  const setTheme = (shop, accessToken, themeId, value, key) => {
-    const path = `themes/${themeId}/assets.json`;
-
-    const data = {
-      asset: {
-        value,
-        key,
-      },
-    };
-
-    return callRest(getUrl(shop, path), 'put', accessToken, data).catch(
-      console.error,
-    );
-  };
-
-  const setScriptTag = (shop, accessToken, event, src) => {
-    const path = 'script_tags.json';
-
-    const data = {
-      script_tag: {
-        event,
-        src,
-      },
-    };
-
-    return callRest(getUrl(shop, path), 'post', accessToken, data).catch(
-      console.error,
-    );
-  };
-
-  return {
-    getThemes,
-    getTheme,
-    setTheme,
-    setScriptTag,
-  };
+  return { get };
 };
 
 module.exports = getShopifyRest;
