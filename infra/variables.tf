@@ -8,10 +8,10 @@ variable "shopify_api_key" {}
 
 variable "secret_key" {}
 
-variable "host" {}
-
 variable "hosted_zone_domain" {}
 
 variable "subdomain" {}
 
 variable "app_version" {}
+
+variable "deploy_bucket_name" {}

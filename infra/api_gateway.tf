@@ -67,3 +67,7 @@ resource "aws_api_gateway_base_path_mapping" "api_url_map" {
   stage_name  = aws_api_gateway_deployment.deployment.stage_name
   domain_name = aws_api_gateway_domain_name.url.domain_name
 }
+
+output "url" {
+  value = aws_api_gateway_domain_name.url.domain_name
+}

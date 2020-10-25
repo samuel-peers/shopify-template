@@ -60,10 +60,11 @@ Uses terraform, run `cd infra`.
 
 1. Remove the `sample` part of the filename `.sample.env` and fill in values
 2. Create values for the terraform `variables.tf`
-3. Create values for the terraform `deploy_bucket/variables.tf`
-4. `make build-deploy-bucket` to create an S3 bucket to store the build artifact
-5. `make deploy` to bundle the backend and push to the S3 bucket
-6. `make build-server` to create the API Gateway and Lambda function
+3. `make build-deploy-bucket` to create an S3 bucket to store the build artifact
+4. `make deploy` to bundle the backend and push to the S3 bucket
+5. `make build-server` to create the API Gateway and Lambda function
+
+The `url` output of `make build-server` can be used when setting up the app in `partners.shopify.com`.
 
 #### Customize Vue configuration
 

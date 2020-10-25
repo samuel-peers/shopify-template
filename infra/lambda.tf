@@ -52,8 +52,8 @@ resource "aws_lambda_function" "server" {
   role          = aws_iam_role.iam_for_lambda.arn
   handler       = "testy.test"
 
-  s3_bucket = "shopify-app-deploy-bucket"
-  s3_key    = "${var.app_version}/output.zip"
+  s3_bucket = var.deploy_bucket_name
+  s3_key    = "${var.app_version}/lambda-build.zip"
 
   runtime = "nodejs12.x"
 

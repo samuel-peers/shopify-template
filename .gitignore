@@ -27,7 +27,4 @@ todos.txt
 *.tfstate
 *.tfstate.backup
 */**/.terraform
-
-# todo temp
-testy.js
-output.zip
+lambda-build.zip
