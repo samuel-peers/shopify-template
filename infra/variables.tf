@@ -13,3 +13,5 @@ variable "host" {}
 variable "hosted_zone_domain" {}
 
 variable "subdomain" {}
+
+variable "app_version" {}

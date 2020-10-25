@@ -25,7 +25,8 @@ todos.txt
 
 *.tfvars
 *.tfstate
-infra/.terraform
+*.tfstate.backup
+*/**/.terraform
 
 # todo temp
 testy.js

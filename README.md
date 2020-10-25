@@ -2,15 +2,11 @@ Most of the scaffolding needed for making a Shopify app using Vue, Express, Grap
 
 #### Requirements
 
-- Remove the `sample` part of the filename `.sample.env` and fill in values
-
-- An AWS Lambda function + API Gateway (iac to come) (with lambda name `magnet-lambda-function-[STAGE]`)
-
-- An AWS user with Lambda policy to deploy
-
-- `aws-cli` (`pip3 install awscli --upgrade --user`) (more installation options [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html))
+- `aws-cli` (`sudo apt install awscli`) (more installation options [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html))
 
 #### Backend development
+
+Remove the `sample` part of the filename `.sample.env` and fill in values.
 
 ```
 cd backend
@@ -58,26 +54,16 @@ https://[hostname provided by ngrok]/auth/callback
 
 7. Click `Test your app` and install the app on your test store
 
-#### Deploy:
+#### Infrastructure:
 
-```
-source deploy.sh
-```
+Uses terraform, run `cd infra`.
 
-Pushing to remote also triggers `deploy.sh`.
-
-Add the `--no-verify` flag to skip deployment:
-
-```
-git push --no-verify origin [branch]
-```
-
-`deploy.sh` will deploy to the following lambda functions based on the current branch:
-
-- `master = magnet-lambda-function-release`
-- `develop = magnet-lambda-function-dev`
-- `release/* = magnet-lambda-function-staging`
-- `feature/* = magnet-lambda-function-test`
+1. Remove the `sample` part of the filename `.sample.env` and fill in values
+2. Create values for the terraform `variables.tf`
+3. Create values for the terraform `deploy_bucket/variables.tf`
+4. `make build-deploy-bucket` to create an S3 bucket to store the build artifact
+5. `make deploy` to bundle the backend and push to the S3 bucket
+6. `make build-server` to create the API Gateway and Lambda function
 
 #### Customize Vue configuration
 

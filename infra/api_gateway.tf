@@ -1,5 +1,5 @@
 resource "aws_api_gateway_rest_api" "api" {
-  name = "serverless" # TODO actual name when this is a module
+  name = "serverless"
 }
 
 resource "aws_api_gateway_resource" "proxy" {
@@ -66,8 +66,4 @@ resource "aws_api_gateway_base_path_mapping" "api_url_map" {
   api_id      = aws_api_gateway_rest_api.api.id
   stage_name  = aws_api_gateway_deployment.deployment.stage_name
   domain_name = aws_api_gateway_domain_name.url.domain_name
-}
-
-output "base_url" {
-  value = aws_api_gateway_deployment.deployment.invoke_url
 }

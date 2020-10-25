@@ -48,13 +48,12 @@ resource "aws_iam_role_policy_attachment" "lambda_logs" {
 }
 
 resource "aws_lambda_function" "server" {
-  # aws lambda invoke --region=us-west-2 --function-name=lambda_function_name output.txt
-  filename      = "output.zip"
-  function_name = "shopify-app" # TODO rename when you make this a module
+  function_name = "shopify-app"
   role          = aws_iam_role.iam_for_lambda.arn
   handler       = "testy.test"
 
-  source_code_hash = filebase64sha256("output.zip")
+  s3_bucket = "shopify-app-deploy-bucket"
+  s3_key    = "${var.app_version}/output.zip"
 
   runtime = "nodejs12.x"
 
