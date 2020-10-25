@@ -22,3 +22,11 @@ output.zip
 .env
 
 todos.txt
+
+*.tfvars
+*.tfstate
+infra/.terraform
+
+# todo temp
+testy.js
+output.zip
