@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+const axios = require('axios');
 const crypto = require('crypto');
 
 const validateWebhook = (appSecret, body, hmac) =>
@@ -44,21 +44,18 @@ const registerWebhook = async ({
   shop,
   apiVersion,
 }) => {
-  const response = await fetch(
-    `https://${shop}/admin/api/${apiVersion}/graphql.json`,
-    {
-      method: 'POST',
-      body: buildQuery(topic, address),
-      headers: {
-        'X-Shopify-Access-Token': accessToken,
-        'Content-Type': 'application/graphql',
-      },
+  // TODO shopify api access should be similar to rest.js
+  const { data } = await axios({
+    url: `https://${shop}/admin/api/${apiVersion}/graphql.json`,
+    method: 'POST',
+    data: buildQuery(topic, address),
+    headers: {
+      'X-Shopify-Access-Token': accessToken,
+      'Content-Type': 'application/graphql',
     },
-  );
+  });
 
-  const result = await response.json();
-
-  return { success: isSuccess(result), result };
+  return { success: isSuccess(data), result: data };
 };
 
 module.exports = { registerWebhook, validateWebhook };

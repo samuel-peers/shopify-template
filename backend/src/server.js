@@ -1,5 +1,9 @@
 const http = require('http');
-const app = require('./business/app');
+const createApp = require('./business/app');
+
+const frontendPath = '../../../dist/secure';
+
+const app = createApp(frontendPath);
 
 const server = http.createServer(app);
 let currentApp = app;

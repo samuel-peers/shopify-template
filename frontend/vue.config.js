@@ -1,4 +1,4 @@
 module.exports = {
   publicPath: './',
-  outputDir: './dist/secure'
+  outputDir: '../dist/frontend/secure',
 };

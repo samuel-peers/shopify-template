@@ -9,7 +9,7 @@ const servers = {
     lambda: `${srcDir}/lambda.js`,
   },
   output: {
-    path: path.join(__dirname, 'dist'),
+    path: path.join(__dirname, '../dist'),
     publicPath: '/',
     filename: '[name]-build.js',
     library: '',

@@ -10,143 +10,152 @@ const getDynamo = require('../persistence/dynamo');
 const { registerWebhook, validateWebhook } = require('./webhooks');
 const { getTokenAccess } = require('./dataAccess');
 
-const tokenAccess = getTokenAccess(getDynamo());
+const createApp = (frontendPath) => {
+  const tokenAccess = getTokenAccess(getDynamo());
 
-const {
-  STAGE,
-  SHOPIFY_API_SECRET_KEY,
-  SHOPIFY_API_KEY,
-  SECRET_KEY,
-  HOST,
-} = process.env;
+  const {
+    STAGE,
+    SHOPIFY_API_SECRET_KEY,
+    SHOPIFY_API_KEY,
+    SECRET_KEY,
+    HOST,
+  } = process.env;
 
-const prefix = STAGE ? `/${STAGE}` : '';
+  // TODO NEEDED? NO!
+  const prefix = STAGE ? `/${STAGE}` : '';
 
-const adminUrl = (shop) => `https://${shop}/admin/apps/${SHOPIFY_API_KEY}`;
-const authFailUrl = `${prefix}/fail`;
-const redirectPath = `${prefix}/auth/callback`;
-const authPath = '/auth';
-const authCallbackPath = '/auth/callback';
-const scope = ['read_products'];
+  const adminUrl = (shop) => `https://${shop}/admin/apps/${SHOPIFY_API_KEY}`;
+  const authFailUrl = `${prefix}/fail`;
+  const redirectPath = `${prefix}/auth/callback`;
+  const authPath = '/auth';
+  const authCallbackPath = '/auth/callback';
+  const scope = ['read_products'];
 
-const frontendRoute = 'secure';
-const frontendPath = `../../../frontend/dist/${frontendRoute}`;
-const homePage = 'index.html';
+  const frontendRoute = 'secure';
+  const homePage = 'index.html';
 
-const onAuth = async (req, res, shop, accessToken) => {
-  tokenAccess.putToken(shop, accessToken);
+  const onNoAuth = (res) => {
+    res.redirect(authFailUrl);
+  };
 
-  const registration = await registerWebhook({
-    address: `${HOST}/uninstall`,
-    topic: 'APP_UNINSTALLED',
-    accessToken,
-    shop,
-    apiVersion: '2020-10',
-  });
+  const onAuth = async (req, res, shop, accessToken) => {
+    const putTokenError = tokenAccess.putToken(shop, accessToken);
 
-  if (!registration.success) {
-    console.error('Failed to register webhook', registration.result);
-  }
-
-  res.redirect(adminUrl(shop));
-};
-
-const onNoAuth = (res) => {
-  res.redirect(authFailUrl);
-};
-
-const installAuth = getInstallMiddleware({
-  redirectPath,
-  authPath,
-  authCallbackPath,
-  authFailUrl,
-  scope,
-  onAuth,
-  appKey: SHOPIFY_API_KEY,
-  appSecret: SHOPIFY_API_SECRET_KEY,
-});
-
-const verifyToken = () => (req, res, next) => {
-  try {
-    const { jwtToken } = req.cookies;
-
-    jwt.verify(jwtToken, SECRET_KEY, (err) => {
-      if (!err) {
-        next();
-      } else {
-        onNoAuth(res);
-      }
-    });
-  } catch (e) {
-    onNoAuth(res);
-  }
-};
-
-const secureMiddleware = () => verifyToken();
-
-const app = express();
-
-app.use(cookieParser());
-
-app.use(installAuth);
-
-app.post('/uninstall', async (req) => {
-  const hmac = req.header('X-Shopify-Hmac-Sha256');
-  const shop = req.header('X-Shopify-Shop-Domain');
-
-  const body = await getRawBody(req);
-
-  if (validateWebhook(SHOPIFY_API_SECRET_KEY, body, hmac)) {
-    tokenAccess.deleteToken(shop);
-  }
-});
-
-app.get('/install', async (req, res) => {
-  const hmacAuthed =
-    req.query.hmac && checkIntegrity(SHOPIFY_API_SECRET_KEY, req.query);
-
-  if (!hmacAuthed) {
-    onNoAuth(res);
-  } else if (hmacAuthed) {
-    const { shop } = req.query;
-
-    const accessToken = await tokenAccess.getToken(shop);
-
-    if (!accessToken) {
-      const redirectUrl = url.format({
-        protocol: 'https',
-        pathname: authPath,
-        query: {
-          shop,
-        },
+    if (putTokenError) {
+      console.error(`Failed to put accessToken for ${shop}`, putTokenError);
+      onNoAuth(res);
+    } else {
+      const registration = await registerWebhook({
+        address: `${HOST}/uninstall`,
+        topic: 'APP_UNINSTALLED',
+        accessToken,
+        shop,
+        apiVersion: '2020-10',
       });
 
-      res.redirect(redirectUrl);
-    } else {
-      const jwtToken = jwt.sign({ shop }, SECRET_KEY);
+      if (!registration.success) {
+        console.error('Failed to register webhook', registration.result);
+      }
 
-      res.cookie('shop', shop, { httpOnly: true });
-      res.cookie('jwtToken', jwtToken, { httpOnly: true });
-      res.cookie('accessToken', accessToken, { httpOnly: true });
-
-      res.redirect(`${prefix}/${frontendRoute}/${homePage}`);
+      res.redirect(adminUrl(shop));
     }
-  }
-});
+  };
 
-app.all(`/${frontendRoute}/*`, secureMiddleware());
+  const installAuth = getInstallMiddleware({
+    redirectPath,
+    authPath,
+    authCallbackPath,
+    authFailUrl,
+    scope,
+    onAuth,
+    appKey: SHOPIFY_API_KEY,
+    appSecret: SHOPIFY_API_SECRET_KEY,
+  });
 
-app.use(
-  `/${frontendRoute}`,
-  express.static(path.join(__dirname, frontendPath)),
-);
+  const verifyToken = () => (req, res, next) => {
+    try {
+      const { jwtToken } = req.cookies;
 
-app.get('/fail', (req, res) => {
-  res.sendStatus(404);
-});
+      jwt.verify(jwtToken, SECRET_KEY, (err) => {
+        if (!err) {
+          next();
+        } else {
+          onNoAuth(res);
+        }
+      });
+    } catch (e) {
+      onNoAuth(res);
+    }
+  };
 
-app.all('/*', (req, res) => {
-  res.sendStatus(404);
-});
+  const secureMiddleware = () => verifyToken();
 
-module.exports = app;
+  const app = express();
+
+  app.use(cookieParser());
+
+  app.use(installAuth);
+
+  app.post('/uninstall', async (req) => {
+    const hmac = req.header('X-Shopify-Hmac-Sha256');
+    const shop = req.header('X-Shopify-Shop-Domain');
+
+    const body = await getRawBody(req);
+
+    if (validateWebhook(SHOPIFY_API_SECRET_KEY, body, hmac)) {
+      tokenAccess.deleteToken(shop);
+    }
+  });
+
+  app.get('/install', async (req, res) => {
+    const hmacAuthed =
+      req.query.hmac && checkIntegrity(SHOPIFY_API_SECRET_KEY, req.query);
+
+    if (!hmacAuthed) {
+      onNoAuth(res);
+    } else if (hmacAuthed) {
+      const { shop } = req.query;
+
+      const accessToken = await tokenAccess.getToken(shop);
+
+      if (!accessToken) {
+        const redirectUrl = url.format({
+          protocol: 'https',
+          pathname: authPath,
+          query: {
+            shop,
+          },
+        });
+
+        res.redirect(redirectUrl);
+      } else {
+        const jwtToken = jwt.sign({ shop }, SECRET_KEY);
+
+        res.cookie('shop', shop, { httpOnly: true });
+        res.cookie('jwtToken', jwtToken, { httpOnly: true });
+        res.cookie('accessToken', accessToken, { httpOnly: true });
+
+        res.redirect(`${prefix}/${frontendRoute}/${homePage}`);
+      }
+    }
+  });
+
+  app.all(`/${frontendRoute}/*`, secureMiddleware());
+
+  app.use(
+    `/${frontendRoute}`,
+    express.static(path.join(__dirname, frontendPath)),
+  );
+
+  app.get('/fail', (req, res) => {
+    res.sendStatus(404);
+  });
+
+  app.all('/*', (req, res) => {
+    res.sendStatus(404);
+  });
+
+  return app;
+};
+
+module.exports = createApp;

@@ -33,7 +33,8 @@ const getDynamo = () => ({
   },
 
   putToken: (shop, accessToken) => {
-    const errorMsg = `Failed to put accessToken for ${shop}`;
+    let error = null;
+
     const putparams = {
       TableName: tableName,
       Item: {
@@ -52,9 +53,11 @@ const getDynamo = () => ({
           console.error(err, err.stack);
         }
       });
-    } catch (error) {
-      console.error(errorMsg, error);
+    } catch (err) {
+      error = err;
     }
+
+    return error;
   },
 
   deleteToken: (shop) => {

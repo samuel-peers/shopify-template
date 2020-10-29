@@ -1,8 +1,8 @@
 .DS_Store
+
 node_modules
-/frontend/dist
 /frontend/node_modules
-/backend/dist
+dist/
 
 .env.local
 .env.*.local
@@ -18,7 +18,6 @@ frontend/yarn-error.log*
 *.sln
 *.sw*
 
-output.zip
 .env
 
 todos.txt
@@ -27,4 +26,3 @@ todos.txt
 *.tfstate
 *.tfstate.backup
 */**/.terraform
-lambda-build.zip
