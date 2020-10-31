@@ -15,19 +15,15 @@ const createApp = (frontendPath) => {
   const tokenAccess = getTokenAccess(getDynamo(accessTokensTableName));
 
   const {
-    STAGE,
     SHOPIFY_API_SECRET_KEY,
     SHOPIFY_API_KEY,
     SECRET_KEY,
     HOST,
   } = process.env;
 
-  // TODO NEEDED? NO!
-  const prefix = STAGE ? `/${STAGE}` : '';
-
   const adminUrl = (shop) => `https://${shop}/admin/apps/${SHOPIFY_API_KEY}`;
-  const authFailUrl = `${prefix}/fail`;
-  const redirectPath = `${prefix}/auth/callback`;
+  const authFailUrl = '/fail';
+  const redirectPath = '/auth/callback';
   const authPath = '/auth';
   const authCallbackPath = '/auth/callback';
   const scope = ['read_products'];
@@ -136,7 +132,7 @@ const createApp = (frontendPath) => {
         res.cookie('jwtToken', jwtToken, { httpOnly: true });
         res.cookie('accessToken', accessToken, { httpOnly: true });
 
-        res.redirect(`${prefix}/${frontendRoute}/${homePage}`);
+        res.redirect(`/${frontendRoute}/${homePage}`);
       }
     }
   });
