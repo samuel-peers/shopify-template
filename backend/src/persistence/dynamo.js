@@ -1,9 +1,8 @@
 const AWS = require('aws-sdk');
 
 const dynamodb = new AWS.DynamoDB({ region: 'us-west-2' });
-const tableName = 'magnet-dynamodb';
 
-const getDynamo = () => ({
+const getDynamo = (tableName) => ({
   getToken: async (shop) => {
     const errorMsg = `AccessToken not found for ${shop}`;
     let result = null;

@@ -11,7 +11,8 @@ const { registerWebhook, validateWebhook } = require('./webhooks');
 const { getTokenAccess } = require('./dataAccess');
 
 const createApp = (frontendPath) => {
-  const tokenAccess = getTokenAccess(getDynamo());
+  const accessTokensTableName = 'shopify-access-tokens';
+  const tokenAccess = getTokenAccess(getDynamo(accessTokensTableName));
 
   const {
     STAGE,

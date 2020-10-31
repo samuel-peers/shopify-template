@@ -56,7 +56,7 @@ resource "aws_iam_policy" "lambda_dynamo" {
       "Action": [
         "dynamodb:*"
       ],
-      "Resource": "arn:aws:dynamodb:*:*:*"
+      "Resource": "${aws_dynamodb_table.access_tokens.arn}"
     }
   ]
 }
@@ -105,4 +105,8 @@ resource "aws_lambda_permission" "allow_api_to_server" {
   principal     = "apigateway.amazonaws.com"
 
   source_arn = "${aws_api_gateway_rest_api.api.execution_arn}/*/*"
+}
+
+output "app_version" {
+  value = var.app_version
 }
