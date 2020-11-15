@@ -1,12 +1,16 @@
-Most of the scaffolding needed for making a Shopify app using Vue, Express, GraphQL, and AWS Lambda.
+### Shopify Template
+
+The frontend, backend, and infractructure required to make a Shopify app using Vue, Express, GraphQL, DynamoDB, and AWS Lambda.
 
 #### Requirements
 
 - `aws-cli` (`sudo apt install awscli`) (more installation options [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html))
+- [Terraform](https://www.terraform.io/downloads.html)
+- Node 13.x (recommend [nvm](https://github.com/nvm-sh/nvm))
 
 #### Backend development
 
-Remove the `sample` part of the filename `.sample.env` and fill in values.
+Remove the `sample` part of the filename `.sample.env` and fill in the values.
 
 ```
 cd backend
@@ -56,10 +60,16 @@ https://[hostname provided by ngrok]/auth/callback
 
 #### Infrastructure:
 
-Uses terraform, run `cd infra`.
+Uses Terraform to spin up:
 
-1. Remove the `sample` part of the filename `.sample.env` and fill in values
-2. Create values for the terraform `variables.tf`
+- An S3 bucket for storing build artifacts
+- API Gateway and a Lambda function for running the server
+- DynamoDB for storing Shopify Access Tokens
+
+In the `infra` directory:
+
+1. Remove the `sample` part of the filename `.sample.env` and fill in the values
+2. Create values for the Terraform `variables.tf`
 3. `make build-deploy-bucket` to create an S3 bucket to store the build artifact
 4. `make deploy` to bundle the backend and push to the S3 bucket
 5. `make build-server` to create the API Gateway and Lambda function
