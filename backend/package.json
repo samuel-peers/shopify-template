@@ -9,7 +9,7 @@
     "lint": "eslint 'src/**/*.js'"
   },
   "dependencies": {
-    "aws-sdk": "^2.437.0",
+    "aws-sdk": "^2.814.0",
     "aws-serverless-express": "^3.3.5",
     "axios": "^0.18.1",
     "cookie-parser": "^1.4.4",
