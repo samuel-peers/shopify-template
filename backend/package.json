@@ -14,7 +14,7 @@
     "axios": "^0.18.1",
     "cookie-parser": "^1.4.4",
     "dotenv": "^8.2.0",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "jsonwebtoken": "^8.5.1",
     "lru-cache": "^5.1.1",
     "raw-body": "^2.4.1",
