@@ -15,7 +15,7 @@
     "cookie-parser": "^1.4.4",
     "dotenv": "^8.2.0",
     "express": "^4.16.4",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "lru-cache": "^5.1.1",
     "raw-body": "^2.4.1",
     "request": "^2.88.0"
